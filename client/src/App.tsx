@@ -7,10 +7,10 @@ import { HomePage, LoginPage, RegisterPage } from 'src/pages'
 export const App = (): JSX.Element => {
   const [isLogged, setIsLogged] = useState(false)
 
-  if (!isLogged) return <h1>Debes iniciar sesion</h1>
+  if (!isLogged) return <LoginPage />
 
   return (
-    <h1>Bienvenido</h1>
+    <HomePage />
     // <Routes>
     //   <Route path={routes.home} element={<HomePage />} />
     //   <Route path={routes.login} element={<LoginPage />} />
