@@ -1,6 +1,10 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, SetStateAction, useState } from 'react'
 
-import { CommonPageProps } from 'src/App'
+import { CommonPageProps, User } from 'src/App'
+
+interface LoginPageProps {
+  setUser(value: SetStateAction<User | null>): void
+}
 
 interface LoginFormValues {
   email: string
@@ -15,7 +19,10 @@ const mockUsers: Record<string, { id: string; email: string; password: string } 
   },
 }
 
-export const LoginPage = ({ setIsLogged }: CommonPageProps): JSX.Element => {
+export const LoginPage = ({
+  setIsLogged,
+  setUser,
+}: CommonPageProps & LoginPageProps): JSX.Element => {
   const [formValues, setFormValues] = useState<LoginFormValues>({
     email: '',
     password: '',
@@ -48,7 +55,8 @@ export const LoginPage = ({ setIsLogged }: CommonPageProps): JSX.Element => {
       return
     }
 
-    // TODO: navegar al home
+    const newUser: User = structuredClone(mockUsers[email]!)
+    setUser(newUser)
     setIsLoading(false)
     setIsLogged(true)
     return
