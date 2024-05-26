@@ -11,7 +11,7 @@ interface LoginFormValues {
   password: string
 }
 
-const mockUsers: Record<string, { id: string; email: string; password: string } | undefined> = {
+const mockUsers: Record<string, { id: string; email: string; password: string }> = {
   ['foo@bar.com']: {
     id: `${+new Date()}`,
     email: 'foo@bar.com',
@@ -38,16 +38,16 @@ export const LoginPage = ({
 
     const { email, password } = formValues
 
-    const isUserRegistered = mockUsers[email]
+    const foundUser = mockUsers[email]
 
-    if (!isUserRegistered) {
+    if (!foundUser) {
       // TODO: navegar al registro
       setIsLoading(false)
       return
     }
 
-    const isSameEmail = isUserRegistered?.email === email
-    const isSamePassword = isUserRegistered?.password === password
+    const isSameEmail = foundUser.email === email
+    const isSamePassword = foundUser.password === password
 
     if (!(isSameEmail && isSamePassword)) {
       setFormValues({ email: '', password: '' })
@@ -55,8 +55,9 @@ export const LoginPage = ({
       return
     }
 
-    const newUser: User = structuredClone(mockUsers[email]!)
+    const newUser: User = structuredClone(foundUser)
     setUser(newUser)
+
     setIsLoading(false)
     setIsLogged(true)
     return
