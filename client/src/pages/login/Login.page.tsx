@@ -32,12 +32,11 @@ export const LoginPage = ({
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     setIsLoading(true)
     e.preventDefault()
 
     const { email, password } = formValues
-
     const foundUser = mockUsers[email]
 
     if (!foundUser) {
@@ -58,8 +57,8 @@ export const LoginPage = ({
     const newUser: User = structuredClone(foundUser)
     setUser(newUser)
 
+    await new Promise(() => setTimeout(() => setIsLogged(true), 2000))
     setIsLoading(false)
-    setIsLogged(true)
     return
   }
 

@@ -5,10 +5,13 @@ interface HomePageProps extends CommonPageProps {
 }
 
 export const HomePage = ({ setIsLogged, user }: HomePageProps): JSX.Element => {
+  const handleLogout = async () =>
+    await new Promise(() => setTimeout(() => setIsLogged(false), 2000))
+
   return (
     <>
       <h1>Bienvenido {user?.email}</h1>
-      <button onClick={() => setIsLogged(false)}>Cerrar sesion</button>
+      <button onClick={handleLogout}>Cerrar sesion</button>
     </>
   )
 }
