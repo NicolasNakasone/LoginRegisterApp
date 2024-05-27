@@ -1,3 +1,6 @@
+import { Link } from 'react-router-dom'
+import { routes } from 'src/constants/routes'
+
 export const RegisterPage = (): JSX.Element => {
   return (
     <>
@@ -7,6 +10,10 @@ export const RegisterPage = (): JSX.Element => {
         <input type="email" placeholder="Correo" />
         <input type="password" placeholder="Contraseña" />
         <input type="password" placeholder="Repetir contraseña" />
+        <button /* disabled={isLoading} */ type="submit">Registrate</button>
+        <p>
+          ¿Ya tienes cuenta? <Link to={routes.login}>Inicia sesión</Link>
+        </p>
       </form>
     </>
   )
