@@ -1,6 +1,8 @@
 import { FormEvent, SetStateAction, useState } from 'react'
 
+import { Link } from 'react-router-dom'
 import { CommonPageProps, User } from 'src/App'
+import { routes } from 'src/constants/routes'
 
 interface LoginPageProps {
   setUser(value: SetStateAction<User | null>): void
@@ -40,8 +42,9 @@ export const LoginPage = ({
     const foundUser = mockUsers[email]
 
     if (!foundUser) {
-      // TODO: navegar al registro
       setIsLoading(false)
+      // TODO: Mostrar error - usuario no registrado
+      // Solo necesario el return si foundUser esta tipado como undefined
       return
     }
 
@@ -49,6 +52,7 @@ export const LoginPage = ({
     const isSamePassword = foundUser.password === password
 
     if (!(isSameEmail && isSamePassword)) {
+      // TODO: Mostrar error - usuario o contraseña erróneas
       setFormValues({ email: '', password: '' })
       setIsLoading(false)
       return
@@ -89,6 +93,9 @@ export const LoginPage = ({
         <button disabled={isLoading} type="submit">
           Iniciar sesión
         </button>
+        <p>
+          ¿No tienes cuenta? <Link to={routes.register}>Registrate</Link>
+        </p>
       </form>
     </>
   )
