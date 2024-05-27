@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { CommonPageProps, User } from 'src/App'
 
 interface HomePageProps extends CommonPageProps {
@@ -5,13 +6,20 @@ interface HomePageProps extends CommonPageProps {
 }
 
 export const HomePage = ({ setIsLogged, user }: HomePageProps): JSX.Element => {
-  const handleLogout = async () =>
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleLogout = async () => {
+    setIsLoading(true)
     await new Promise(() => setTimeout(() => setIsLogged(false), 2000))
+    setIsLoading(false)
+  }
 
   return (
     <>
       <h1>Bienvenido {user?.email}</h1>
-      <button onClick={handleLogout}>Cerrar sesion</button>
+      <button disabled={isLoading} onClick={handleLogout}>
+        Cerrar sesion
+      </button>
     </>
   )
 }
