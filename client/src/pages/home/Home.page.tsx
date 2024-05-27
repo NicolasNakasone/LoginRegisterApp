@@ -1,4 +1,5 @@
 import { useState } from 'react'
+
 import { CommonPageProps, User } from 'src/App'
 
 interface HomePageProps extends CommonPageProps {
