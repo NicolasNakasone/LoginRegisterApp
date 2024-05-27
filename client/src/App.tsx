@@ -8,6 +8,7 @@ export interface CommonPageProps {
   setIsLogged: (value: SetStateAction<boolean>) => void
 }
 
+// Mover a api.ts
 export interface User {
   id: string
   email: string
@@ -15,7 +16,8 @@ export interface User {
   full_name: string
 }
 
-// Mover a api.ts
+export type UserInput = Omit<User, 'id'>
+
 type UserList = Record<string, User>
 
 const mockUsers: UserList = {
@@ -37,6 +39,14 @@ export const api = {
   findUser: (key: string) => mockUsers[key],
   getUsers: (): Promise<UserList> => {
     return new Promise(resolve => setTimeout(() => resolve(mockUsers), 1000))
+  },
+  addUser: (newUser: UserInput): Promise<User> => {
+    return new Promise(resolve =>
+      setTimeout(() => {
+        mockUsers[newUser.email] = { id: `${+new Date()}`, ...newUser }
+        resolve(mockUsers[newUser.email])
+      }, 1000)
+    )
   },
 }
 // Mover a api.ts
