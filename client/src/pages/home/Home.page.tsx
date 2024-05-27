@@ -1,13 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
+import { useNavigate } from 'react-router-dom'
 import { CommonPageProps, User } from 'src/App'
+import { routes } from 'src/constants/routes'
 
 interface HomePageProps extends CommonPageProps {
+  isLogged: boolean
   user: User | null
 }
 
-export const HomePage = ({ setIsLogged, user }: HomePageProps): JSX.Element => {
+export const HomePage = ({ isLogged, setIsLogged, user }: HomePageProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!isLogged) navigate(routes.login)
+  }, [])
 
   const handleLogout = async () => {
     setIsLoading(true)
