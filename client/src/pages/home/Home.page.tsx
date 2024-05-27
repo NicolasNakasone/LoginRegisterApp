@@ -20,8 +20,14 @@ export const HomePage = ({ isLogged, setIsLogged, user }: HomePageProps): JSX.El
 
   const handleLogout = async () => {
     setIsLoading(true)
-    await new Promise(() => setTimeout(() => setIsLogged(false), 2000))
+    await new Promise(resolve =>
+      setTimeout(() => {
+        resolve(null)
+        setIsLogged(false)
+      }, 2000)
+    )
     setIsLoading(false)
+    navigate(routes.login)
   }
 
   return (
