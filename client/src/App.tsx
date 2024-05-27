@@ -14,6 +14,30 @@ export interface User {
   password: string
 }
 
+// Mover a api.ts
+type UserList = Record<string, { id: string; email: string; password: string }>
+
+const mockUsers: UserList = {
+  ['foo@bar.com']: {
+    id: `${+new Date()}`,
+    email: 'foo@bar.com',
+    password: '1234',
+  },
+  ['asd@asd.com']: {
+    id: `${+new Date()}`,
+    email: 'asd@asd.com',
+    password: '1234',
+  },
+}
+
+export const api = {
+  findUser: (key: string) => mockUsers[key],
+  getUsers: (): Promise<UserList> => {
+    return new Promise(resolve => setTimeout(() => resolve(mockUsers), 1000))
+  },
+}
+// Mover a api.ts
+
 export const App = (): JSX.Element => {
   const [isLogged, setIsLogged] = useState(false)
   const [user, setUser] = useState<User | null>(null)
