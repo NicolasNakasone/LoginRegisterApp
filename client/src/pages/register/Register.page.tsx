@@ -18,10 +18,12 @@ const initialFormValues: RegisterFormValues = {
 export const RegisterPage = (): JSX.Element => {
   const [formValues, setFormValues] = useState<RegisterFormValues>(initialFormValues)
 
+  const [error, setError] = useState('')
   const [isLoading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
+    setError('')
     setLoading(true)
     e.preventDefault()
 
@@ -29,6 +31,7 @@ export const RegisterPage = (): JSX.Element => {
 
     if (api.findUser(email)) {
       // TODO: Error - Usuario ya registrado
+      setError('Usuario ya registrado')
       setFormValues(initialFormValues)
       setLoading(false)
       return
@@ -43,6 +46,7 @@ export const RegisterPage = (): JSX.Element => {
     */
     if (password !== re_password) {
       // TODO: Error - Contraseñas no coinciden
+      setError('Contraseñas no coinciden')
       setFormValues(prevValues => ({ ...prevValues, password: '', re_password: '' }))
       setLoading(false)
       return
@@ -96,6 +100,7 @@ export const RegisterPage = (): JSX.Element => {
         <button disabled={isLoading} type="submit">
           Registrate
         </button>
+        {error && <p>{error}</p>}
         <p>
           ¿Ya tienes cuenta? <Link to={routes.login}>Inicia sesión</Link>
         </p>
