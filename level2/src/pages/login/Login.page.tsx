@@ -35,7 +35,7 @@ export const LoginPage = ({
     e.preventDefault()
 
     const { email, password } = formValues
-    const foundUser = api.findUser(email)
+    const foundUser = await api.findUser(email)
 
     /* Mas adelante cuando exista la API real y no la constante, se puede
       mandar toda la logica de validaciones como si no encontro el usuario

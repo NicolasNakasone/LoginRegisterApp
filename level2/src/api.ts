@@ -9,42 +9,40 @@ export type UserInput = Omit<User, 'id'>
 
 export type UserList = Record<string, User>
 
-const mockUsers: UserList = {
-  // ['foo@bar.com']: {
-  //   id: `${+new Date()}`,
-  //   email: 'foo@bar.com',
-  //   password: '1234',
-  //   full_name: 'foo@bar.com',
-  // },
-  // ['asd@asd.com']: {
-  //   id: `${+new Date()}`,
-  //   email: 'asd@asd.com',
-  //   password: '1234',
-  //   full_name: 'asd@asd.com',
-  // },
-}
-
 export const api = {
-  findUser: (key: string) => {
-    const storedUsers = localStorage.getItem('users')
-    if (storedUsers) {
-      const mappedUsers = JSON.parse(storedUsers) as UserList
-      return mappedUsers[key]
-    }
-    return
+  findUser: (key: string): Promise<User> => {
+    return new Promise(resolve => {
+      const storedUsers = localStorage.getItem('users')
+      if (!storedUsers) return
+
+      setTimeout(() => {
+        const mappedUsers = JSON.parse(storedUsers) as UserList
+        resolve(mappedUsers[key])
+      }, 1000)
+    })
   },
   getUsers: (): Promise<UserList> => {
-    return new Promise(resolve => setTimeout(() => resolve(mockUsers), 1000))
+    return new Promise(resolve => {
+      const storedUsers = localStorage.getItem('users')
+      if (!storedUsers) return
+
+      setTimeout(() => {
+        const mappedUsers = JSON.parse(storedUsers) as UserList
+        resolve(mappedUsers)
+      }, 1000)
+    })
   },
   addUser: (newUser: UserInput): Promise<User> => {
-    return new Promise(resolve =>
+    return new Promise(resolve => {
+      const storedUsers = localStorage.getItem('users')
+      if (!storedUsers) return
+
       setTimeout(() => {
-        mockUsers[newUser.email] = { id: `${+new Date()}`, ...newUser }
-
-        localStorage.setItem('users', JSON.stringify(mockUsers))
-
-        resolve(mockUsers[newUser.email])
+        const mappedUsers = JSON.parse(storedUsers) as UserList
+        mappedUsers[newUser.email] = { id: `${+new Date()}`, ...newUser }
+        localStorage.setItem('users', JSON.stringify(mappedUsers))
+        resolve(mappedUsers[newUser.email])
       }, 1000)
-    )
+    })
   },
 }

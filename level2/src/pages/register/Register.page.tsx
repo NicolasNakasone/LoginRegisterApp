@@ -28,7 +28,7 @@ export const RegisterPage = (): JSX.Element => {
 
     const { email, full_name, password, re_password } = formValues
 
-    if (api.findUser(email)) {
+    if (await api.findUser(email)) {
       // TODO: Error - Usuario ya registrado
       setError('Usuario ya registrado')
       setFormValues(initialFormValues)
