@@ -1,18 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import { useNavigate } from 'react-router-dom'
-import { User } from 'src/api'
-import { CommonPageProps } from 'src/App'
 import { routes } from 'src/constants/routes'
+import { UserContext } from 'src/contexts/UserContext'
 
-interface HomePageProps extends CommonPageProps {
-  isLogged: boolean
-  user: User | null
-}
+export const HomePage = (): JSX.Element => {
+  const { isLogged, setIsLogged, user } = useContext(UserContext)
 
-export const HomePage = ({ isLogged, setIsLogged, user }: HomePageProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false)
-
   const navigate = useNavigate()
 
   useEffect(() => {

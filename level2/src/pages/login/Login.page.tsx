@@ -1,23 +1,18 @@
-import { FormEvent, SetStateAction, useState } from 'react'
+import { FormEvent, useContext, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 import { User, api } from 'src/api'
-import { CommonPageProps } from 'src/App'
 import { routes } from 'src/constants/routes'
-
-interface LoginPageProps {
-  setUser(value: SetStateAction<User | null>): void
-}
+import { UserContext } from 'src/contexts/UserContext'
 
 interface LoginFormValues {
   email: string
   password: string
 }
 
-export const LoginPage = ({
-  setIsLogged,
-  setUser,
-}: CommonPageProps & LoginPageProps): JSX.Element => {
+export const LoginPage = (): JSX.Element => {
+  const { setIsLogged, setUser } = useContext(UserContext)
+
   const [formValues, setFormValues] = useState<LoginFormValues>({
     email: '',
     password: '',
