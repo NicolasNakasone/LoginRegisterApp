@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 
 import { useNavigate } from 'react-router-dom'
-import { CommonPageProps, User } from 'src/App'
+import { CommonPageProps } from 'src/App'
+import { User } from 'src/api'
 import { routes } from 'src/constants/routes'
 
 interface HomePageProps extends CommonPageProps {

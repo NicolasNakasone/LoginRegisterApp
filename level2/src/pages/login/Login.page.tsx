@@ -1,7 +1,8 @@
 import { FormEvent, SetStateAction, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
-import { CommonPageProps, User, api } from 'src/App'
+import { CommonPageProps } from 'src/App'
+import { User, api } from 'src/api'
 import { routes } from 'src/constants/routes'
 
 interface LoginPageProps {
