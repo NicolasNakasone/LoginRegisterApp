@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,md}\"",
-    "type-check": "tsc --pretty --noEmit"
+    "type-check": "tsc --pretty --noEmit",
+    "pre-commit": "npm run lint && npm run format",
+    "pre-push": "npm run type-check"
   },
   "devDependencies": {
     "@types/node": "20.8.10",

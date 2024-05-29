@@ -37,6 +37,14 @@ export const LoginPage = ({
     const { email, password } = formValues
     const foundUser = api.findUser(email)
 
+    /* Mas adelante cuando exista la API real y no la constante, se puede
+      mandar toda la logica de validaciones como si no encontro el usuario
+      o si las contraseñas coinciden (aunque para este caso es discutible,
+      ya que eso creo que es mas una validacion de front, pero bueno).
+      Pero en si, hay cosas que deberia encargarse el servidor/API y devolver
+      la respuesta o error, y dejar al front solo con responsabilidades como
+      limpiar el formulario, actualizar estados, etc.
+    */
     if (!foundUser) {
       setFormValues({ email: '', password: '' })
       setError('Usuario no registrado')
