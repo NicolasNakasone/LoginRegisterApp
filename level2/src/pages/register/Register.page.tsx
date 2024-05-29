@@ -21,7 +21,6 @@ export const RegisterPage = (): JSX.Element => {
   const [error, setError] = useState('')
   const [isLoading, setLoading] = useState(false)
   const navigate = useNavigate()
-
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     setError('')
     setLoading(true)
