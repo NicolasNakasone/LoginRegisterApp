@@ -2,7 +2,6 @@ import { FormEvent, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 import { UserInput, api } from 'src/api'
-
 import { routes } from 'src/constants/routes'
 
 interface RegisterFormValues extends UserInput {
