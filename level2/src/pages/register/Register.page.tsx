@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, memo, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 import { UserInput, api } from 'src/api'
@@ -16,11 +16,21 @@ const initialFormValues: RegisterFormValues = {
 }
 
 export const RegisterPage = (): JSX.Element => {
+  return (
+    <>
+      <h1>Registrate para poder iniciar sesión</h1>
+      <RegisterForm />
+    </>
+  )
+}
+
+const RegisterForm = (): JSX.Element => {
   const [formValues, setFormValues] = useState<RegisterFormValues>(initialFormValues)
 
   const [error, setError] = useState('')
   const [isLoading, setLoading] = useState(false)
   const navigate = useNavigate()
+
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     setError('')
     setLoading(true)
@@ -58,52 +68,49 @@ export const RegisterPage = (): JSX.Element => {
     return
   }
 
+  const handleChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormValues(prevValues => ({ ...prevValues, [e.target.name]: e.target.value }))
+  }
+
   return (
-    <>
-      <h1>Registrate para poder iniciar sesión</h1>
-      <form onSubmit={handleRegister}>
-        <input
-          name={'full_name'}
-          value={formValues.full_name}
-          type="text"
-          placeholder="Nombre y apellido"
-          onChange={e =>
-            setFormValues(prevValues => ({ ...prevValues, full_name: e.target.value }))
-          }
-        />
-        <input
-          name={'email'}
-          value={formValues.email}
-          type="email"
-          placeholder="Correo"
-          onChange={e => setFormValues(prevValues => ({ ...prevValues, email: e.target.value }))}
-        />
-        <input
-          name={'password'}
-          value={formValues.password}
-          type="password"
-          placeholder="Contraseña"
-          onChange={e =>
-            setFormValues(prevValues => ({ ...prevValues, password: e.target.value }))
-          }
-        />
-        <input
-          name={'re_password'}
-          value={formValues.re_password}
-          type="password"
-          placeholder="Repetir contraseña"
-          onChange={e =>
-            setFormValues(prevValues => ({ ...prevValues, re_password: e.target.value }))
-          }
-        />
-        <button disabled={isLoading} type="submit">
-          Registrate
-        </button>
-        {error && <p>{error}</p>}
-        <p>
-          ¿Ya tienes cuenta? <Link to={routes.login}>Inicia sesión</Link>
-        </p>
-      </form>
-    </>
+    <form onSubmit={handleRegister}>
+      <input
+        name={'full_name'}
+        value={formValues.full_name}
+        type="text"
+        placeholder="Nombre y apellido"
+        onChange={handleChangeValue}
+      />
+      <input
+        name={'email'}
+        value={formValues.email}
+        type="email"
+        placeholder="Correo"
+        onChange={handleChangeValue}
+      />
+      <input
+        name={'password'}
+        value={formValues.password}
+        type="password"
+        placeholder="Contraseña"
+        onChange={handleChangeValue}
+      />
+      <input
+        name={'re_password'}
+        value={formValues.re_password}
+        type="password"
+        placeholder="Repetir contraseña"
+        onChange={handleChangeValue}
+      />
+      <button disabled={isLoading} type="submit">
+        Registrate
+      </button>
+      {error && <p>{error}</p>}
+      <p>¿Ya tienes cuenta? {<MemoizedLink />}</p>
+    </form>
   )
 }
+
+const MemoizedLink = memo(() => {
+  return <Link to={routes.login}>Inicia sesión</Link>
+})
