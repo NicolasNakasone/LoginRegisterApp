@@ -39,7 +39,6 @@ const RegisterForm = (): JSX.Element => {
     const { email, full_name, password, re_password } = formValues
 
     if (await api.findUser(email)) {
-      // TODO: Error - Usuario ya registrado
       setError('Usuario ya registrado')
       setFormValues(initialFormValues)
       setLoading(false)
@@ -54,7 +53,6 @@ const RegisterForm = (): JSX.Element => {
       No se, capaz es mas quilombo...
     */
     if (password !== re_password) {
-      // TODO: Error - Contraseñas no coinciden
       setError('Contraseñas no coinciden')
       setFormValues(prevValues => ({ ...prevValues, password: '', re_password: '' }))
       setLoading(false)
