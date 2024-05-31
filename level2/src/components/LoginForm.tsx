@@ -6,18 +6,8 @@ import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
 
-interface LoginFormValues {
-  email: string
-  password: string
-}
-
 export const LoginForm = (): JSX.Element => {
   const { setIsLogged, setUser, navigate } = useContext(UserContext)
-
-  const [formValues, setFormValues] = useState<LoginFormValues>({
-    email: '',
-    password: '',
-  })
 
   const [isPassword, setIsPassword] = useState(true)
 
@@ -28,8 +18,12 @@ export const LoginForm = (): JSX.Element => {
     setIsLoading(true)
     e.preventDefault()
 
-    const { email, password } = formValues
-    const foundUser = await api.findUser(email)
+    const target = e.target as HTMLFormElement
+
+    const email = target[0] as HTMLInputElement
+    const password = target[1] as HTMLInputElement
+
+    const foundUser = await api.findUser(email.value)
 
     /* Mas adelante cuando exista la API real y no la constante, se puede
       mandar toda la logica de validaciones como si no encontro el usuario
@@ -40,18 +34,19 @@ export const LoginForm = (): JSX.Element => {
       limpiar el formulario, actualizar estados, etc.
     */
     if (!foundUser) {
-      setFormValues({ email: '', password: '' })
+      email.value = ''
+      password.value = ''
       setError('❌ Usuario no registrado')
       setIsLoading(false)
       // Solo necesario el return si foundUser esta tipado como undefined
       return
     }
 
-    const isSameEmail = foundUser.email === email
-    const isSamePassword = foundUser.password === password
+    const isSameEmail = foundUser.email === email.value
+    const isSamePassword = foundUser.password === password.value
 
     if (!(isSameEmail && isSamePassword)) {
-      setFormValues(({ email: prevEmail }) => ({ email: prevEmail, password: '' }))
+      password.value = ''
       setError('❌ Contraseña incorrecta')
       setIsLoading(false)
       return
@@ -73,21 +68,9 @@ export const LoginForm = (): JSX.Element => {
 
   return (
     <form onSubmit={e => handleLogin(e)}>
-      <input
-        name="email"
-        value={formValues.email}
-        type="email"
-        placeholder="Correo"
-        onChange={e => setFormValues(prevValues => ({ ...prevValues, email: e.target.value }))}
-      />
+      <input name="email" type="email" placeholder="Correo" />
       {/* TODO: Wrappear input y button en un solo componente */}
-      <input
-        name="password"
-        value={formValues.password}
-        type={isPassword ? 'password' : 'text'}
-        placeholder="Contraseña"
-        onChange={e => setFormValues(prevValues => ({ ...prevValues, password: e.target.value }))}
-      />
+      <input name="password" type={isPassword ? 'password' : 'text'} placeholder="Contraseña" />
       <button type="button" onClick={() => setIsPassword(!isPassword)}>
         {isPassword ? `Mostrar 🧐` : `Ocultar 😴`}
       </button>
