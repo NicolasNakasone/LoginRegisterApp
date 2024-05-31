@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useState } from 'react'
+import { FormEvent, memo, useContext, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 import { User, api } from 'src/api'
@@ -11,6 +11,15 @@ interface LoginFormValues {
 }
 
 export const LoginPage = (): JSX.Element => {
+  return (
+    <>
+      <h1>Inicia sesión para poder ver la app</h1>
+      <LoginForm />
+    </>
+  )
+}
+
+const LoginForm = (): JSX.Element => {
   const { setIsLogged, setUser } = useContext(UserContext)
 
   const [formValues, setFormValues] = useState<LoginFormValues>({
@@ -73,37 +82,34 @@ export const LoginPage = (): JSX.Element => {
   }
 
   return (
-    <>
-      <h1>Inicia sesión para poder ver la app</h1>
-      <form onSubmit={e => handleLogin(e)}>
-        <input
-          name="email"
-          value={formValues.email}
-          type="text"
-          placeholder="Correo"
-          onChange={e => setFormValues(prevValues => ({ ...prevValues, email: e.target.value }))}
-        />
-        {/* TODO: Wrappear input y button en un solo componente */}
-        <input
-          name="password"
-          value={formValues.password}
-          type={isPassword ? 'password' : 'text'}
-          placeholder="Contraseña"
-          onChange={e =>
-            setFormValues(prevValues => ({ ...prevValues, password: e.target.value }))
-          }
-        />
-        <button type="button" onClick={() => setIsPassword(!isPassword)}>
-          {isPassword ? `Mostrar 🧐` : `Ocultar 😴`}
-        </button>
-        <button disabled={isLoading} type="submit">
-          Iniciar sesión
-        </button>
-        {error && <p>{error}</p>}
-        <p>
-          ¿No tienes cuenta? <Link to={routes.register}>Registrate</Link>
-        </p>
-      </form>
-    </>
+    <form onSubmit={e => handleLogin(e)}>
+      <input
+        name="email"
+        value={formValues.email}
+        type="text"
+        placeholder="Correo"
+        onChange={e => setFormValues(prevValues => ({ ...prevValues, email: e.target.value }))}
+      />
+      {/* TODO: Wrappear input y button en un solo componente */}
+      <input
+        name="password"
+        value={formValues.password}
+        type={isPassword ? 'password' : 'text'}
+        placeholder="Contraseña"
+        onChange={e => setFormValues(prevValues => ({ ...prevValues, password: e.target.value }))}
+      />
+      <button type="button" onClick={() => setIsPassword(!isPassword)}>
+        {isPassword ? `Mostrar 🧐` : `Ocultar 😴`}
+      </button>
+      <button disabled={isLoading} type="submit">
+        Iniciar sesión
+      </button>
+      {error && <p>{error}</p>}
+      <p>¿No tienes cuenta? {<MemoizedLink />}</p>
+    </form>
   )
 }
+
+const MemoizedLink = memo((): JSX.Element => {
+  return <Link to={routes.register}>Registrate</Link>
+})
