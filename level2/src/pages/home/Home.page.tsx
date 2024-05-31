@@ -1,14 +1,12 @@
 import { useContext, useEffect, useState } from 'react'
 
-import { useNavigate } from 'react-router-dom'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 
 export const HomePage = (): JSX.Element => {
-  const { isLogged, setIsLogged, user } = useContext(UserContext)
+  const { isLogged, setIsLogged, user, navigate } = useContext(UserContext)
 
   const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (!isLogged) navigate(routes.login)

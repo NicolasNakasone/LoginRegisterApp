@@ -1,6 +1,6 @@
 import { FormEvent, memo, useContext, useState } from 'react'
 
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { User, api } from 'src/api'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
@@ -11,7 +11,7 @@ interface LoginFormValues {
 }
 
 export const LoginForm = (): JSX.Element => {
-  const { setIsLogged, setUser } = useContext(UserContext)
+  const { setIsLogged, setUser, navigate } = useContext(UserContext)
 
   const [formValues, setFormValues] = useState<LoginFormValues>({
     email: '',
@@ -22,7 +22,6 @@ export const LoginForm = (): JSX.Element => {
 
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     setError('')

@@ -1,8 +1,9 @@
-import { ChangeEvent, FormEvent, memo, useState } from 'react'
+import { ChangeEvent, FormEvent, memo, useContext, useState } from 'react'
 
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { UserInput, api } from 'src/api'
 import { routes } from 'src/constants/routes'
+import { UserContext } from 'src/contexts/UserContext'
 
 interface RegisterFormValues extends UserInput {
   re_password: string
@@ -16,11 +17,12 @@ const initialFormValues: RegisterFormValues = {
 }
 
 export const RegisterForm = (): JSX.Element => {
+  const { navigate } = useContext(UserContext)
+
   const [formValues, setFormValues] = useState<RegisterFormValues>(initialFormValues)
 
   const [error, setError] = useState('')
   const [isLoading, setLoading] = useState(false)
-  const navigate = useNavigate()
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     setError('')
