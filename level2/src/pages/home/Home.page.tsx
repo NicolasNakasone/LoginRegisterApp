@@ -1,12 +1,13 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
+import { useFormStatus } from 'src/hooks/useFormStatus.hook'
 
 export const HomePage = (): JSX.Element => {
   const { isLogged, setIsLogged, user, navigate } = useContext(UserContext)
 
-  const [isLoading, setIsLoading] = useState(false)
+  const { isLoading, setIsLoading } = useFormStatus()
 
   useEffect(() => {
     if (!isLogged) navigate(routes.login)

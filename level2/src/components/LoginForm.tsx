@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { User, api } from 'src/api'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
+import { useFormStatus } from 'src/hooks/useFormStatus.hook'
 
 interface LoginFormValues {
   email: string
@@ -20,8 +21,7 @@ export const LoginForm = (): JSX.Element => {
 
   const [isPassword, setIsPassword] = useState(true)
 
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const { error, isLoading, setError, setIsLoading } = useFormStatus()
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     setError('')
@@ -76,7 +76,7 @@ export const LoginForm = (): JSX.Element => {
       <input
         name="email"
         value={formValues.email}
-        type="text"
+        type="email"
         placeholder="Correo"
         onChange={e => setFormValues(prevValues => ({ ...prevValues, email: e.target.value }))}
       />

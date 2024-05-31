@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { UserInput, api } from 'src/api'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
+import { useFormStatus } from 'src/hooks/useFormStatus.hook'
 
 interface RegisterFormValues extends UserInput {
   re_password: string
@@ -21,12 +22,11 @@ export const RegisterForm = (): JSX.Element => {
 
   const [formValues, setFormValues] = useState<RegisterFormValues>(initialFormValues)
 
-  const [error, setError] = useState('')
-  const [isLoading, setLoading] = useState(false)
+  const { error, isLoading, setError, setIsLoading } = useFormStatus()
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     setError('')
-    setLoading(true)
+    setIsLoading(true)
     e.preventDefault()
 
     const { email, full_name, password, re_password } = formValues
@@ -34,7 +34,7 @@ export const RegisterForm = (): JSX.Element => {
     if (await api.findUser(email)) {
       setError('❌ Usuario ya registrado')
       setFormValues(initialFormValues)
-      setLoading(false)
+      setIsLoading(false)
       return
     }
 
@@ -48,14 +48,14 @@ export const RegisterForm = (): JSX.Element => {
     if (password !== re_password) {
       setError('❌ Contraseñas no coinciden')
       setFormValues(prevValues => ({ ...prevValues, password: '', re_password: '' }))
-      setLoading(false)
+      setIsLoading(false)
       return
     }
 
     await api.addUser({ full_name, email, password })
 
     navigate(routes.login)
-    setLoading(false)
+    setIsLoading(false)
     return
   }
 
