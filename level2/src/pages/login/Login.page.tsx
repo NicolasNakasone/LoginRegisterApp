@@ -42,7 +42,7 @@ export const LoginPage = (): JSX.Element => {
     */
     if (!foundUser) {
       setFormValues({ email: '', password: '' })
-      setError('Usuario no registrado')
+      setError('❌ Usuario no registrado')
       setIsLoading(false)
       // Solo necesario el return si foundUser esta tipado como undefined
       return
@@ -53,7 +53,7 @@ export const LoginPage = (): JSX.Element => {
 
     if (!(isSameEmail && isSamePassword)) {
       setFormValues(({ email: prevEmail }) => ({ email: prevEmail, password: '' }))
-      setError('Contraseña incorrecta')
+      setError('❌ Contraseña incorrecta')
       setIsLoading(false)
       return
     }
