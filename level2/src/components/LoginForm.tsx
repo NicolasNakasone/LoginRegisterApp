@@ -53,12 +53,9 @@ export const LoginForm = (): JSX.Element => {
     const newUser: User = structuredClone(foundUser)
     setUser(newUser)
 
-    await new Promise(resolve =>
-      setTimeout(() => {
-        resolve(null)
-        setIsLogged(true)
-      }, 2000)
-    )
+    await api.login(newUser)
+
+    setIsLogged(true)
     setIsLoading(false)
     navigate(routes.home)
     return

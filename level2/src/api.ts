@@ -45,4 +45,12 @@ export const api = {
       }, 1000)
     })
   },
+  login: (newUser: User): Promise<User> => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        localStorage.setItem('user', JSON.stringify(newUser))
+        resolve(newUser)
+      }, 1000)
+    })
+  },
 }
