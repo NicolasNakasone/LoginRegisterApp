@@ -31,10 +31,11 @@ h1 {
 }
 
 form {
-  margin: auto;
+  min-height: 20rem;
+  margin: 20vh 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 1.5rem;
 }
@@ -60,6 +61,12 @@ button {
 
 button[type="submit"] {
   width: 100%;
+}
+
+p {
+  &:last-child {
+    margin: auto auto 0;
+  }
 }
 
 /* form > button[type="button"] {

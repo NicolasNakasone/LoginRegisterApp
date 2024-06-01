@@ -77,7 +77,7 @@ export const LoginForm = (): JSX.Element => {
   )
 }
 
-const PasswordInput = () => {
+const PasswordInput = memo(() => {
   const [isPassword, setIsPassword] = useState(true)
   const togglePassword = () => {
     setIsPassword(prevPassword => !prevPassword)
@@ -90,7 +90,7 @@ const PasswordInput = () => {
       </button>
     </>
   )
-}
+})
 
 const MemoizedLink = memo((): JSX.Element => {
   return <Link to={routes.register}>Registrate</Link>
