@@ -77,7 +77,7 @@ export const LoginForm = (): JSX.Element => {
   )
 }
 
-const PasswordInput = memo(() => {
+const PasswordInput = memo((): JSX.Element => {
   const [isPassword, setIsPassword] = useState(true)
   const togglePassword = () => {
     setIsPassword(prevPassword => !prevPassword)

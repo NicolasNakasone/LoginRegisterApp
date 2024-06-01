@@ -102,6 +102,6 @@ export const RegisterForm = (): JSX.Element => {
   )
 }
 
-const MemoizedLink = memo(() => {
+const MemoizedLink = memo((): JSX.Element => {
   return <Link to={routes.login}>Inicia sesión</Link>
 })
