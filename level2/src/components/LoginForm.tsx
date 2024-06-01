@@ -9,8 +9,6 @@ import { useFormStatus } from 'src/hooks/useFormStatus.hook'
 export const LoginForm = (): JSX.Element => {
   const { setIsLogged, setUser, navigate } = useContext(UserContext)
 
-  const [isPassword, setIsPassword] = useState(true)
-
   const { error, isLoading, setError, setIsLoading } = useFormStatus()
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
@@ -67,19 +65,30 @@ export const LoginForm = (): JSX.Element => {
   }
 
   return (
-    <form onSubmit={e => handleLogin(e)}>
+    <form onSubmit={handleLogin}>
       <input name="email" type="email" placeholder="Correo" />
-      {/* TODO: Wrappear input y button en un solo componente */}
-      <input name="password" type={isPassword ? 'password' : 'text'} placeholder="Contraseña" />
-      <button type="button" onClick={() => setIsPassword(!isPassword)}>
-        {isPassword ? `Mostrar 🧐` : `Ocultar 😴`}
-      </button>
+      <PasswordInput />
       <button disabled={isLoading} type="submit">
         Iniciar sesión
       </button>
       {error && <p>{error}</p>}
       <p>¿No tienes cuenta? {<MemoizedLink />}</p>
     </form>
+  )
+}
+
+const PasswordInput = () => {
+  const [isPassword, setIsPassword] = useState(true)
+  const togglePassword = () => {
+    setIsPassword(prevPassword => !prevPassword)
+  }
+  return (
+    <>
+      <input name="password" type={isPassword ? 'password' : 'text'} placeholder="Contraseña" />
+      <button type="button" onClick={togglePassword}>
+        {isPassword ? `Mostrar 🧐` : `Ocultar 😴`}
+      </button>
+    </>
   )
 }
 
