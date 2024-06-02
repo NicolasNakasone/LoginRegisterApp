@@ -63,7 +63,10 @@ button[type="submit"] {
   width: 100%;
 }
 
-p {
+/* Para seleccionar solo los p que esten dentro de un form.
+  Sino afecta a todos los p y no es la idea
+*/
+form > p {
   &:last-child {
     margin: auto auto 0;
   }
