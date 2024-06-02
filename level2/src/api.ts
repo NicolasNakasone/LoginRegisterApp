@@ -34,23 +34,27 @@ export const api = {
   },
   addUser: (newUser: UserInput): Promise<User> => {
     return new Promise(resolve => {
-      const storedUsers = localStorage.getItem('users')
-      if (!storedUsers) return
-
       setTimeout(() => {
-        const mappedUsers = JSON.parse(storedUsers) as UserList
-        mappedUsers[newUser.email] = { id: `${+new Date()}`, ...newUser }
-        localStorage.setItem('users', JSON.stringify(mappedUsers))
-        resolve(mappedUsers[newUser.email])
+        const storedUsers = localStorage.getItem('users')
+        if (!storedUsers) {
+          const firstUser: UserList = { [newUser.email]: { id: `${+new Date()}`, ...newUser } }
+          localStorage.setItem('users', JSON.stringify(firstUser))
+          resolve(firstUser[newUser.email])
+          return
+        }
+        const parsedUsers = JSON.parse(storedUsers) as UserList
+        parsedUsers[newUser.email] = { id: `${+new Date()}`, ...newUser }
+        localStorage.setItem('users', JSON.stringify(parsedUsers))
+        resolve(parsedUsers[newUser.email])
       }, 1000)
     })
   },
-  findUser: (key: string): Promise<User> => {
+  findUser: (key: string): Promise<User | null> => {
     return new Promise(resolve => {
-      const storedUsers = localStorage.getItem('users')
-      if (!storedUsers) return
-
       setTimeout(() => {
+        const storedUsers = localStorage.getItem('users')
+        if (!storedUsers) return resolve(null)
+
         const mappedUsers = JSON.parse(storedUsers) as UserList
         resolve(mappedUsers[key])
       }, 1000)
