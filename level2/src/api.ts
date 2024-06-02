@@ -21,14 +21,15 @@ export const api = {
       }, 1000)
     })
   },
-  getUser: async (): Promise<User> => {
-    return await new Promise(resolve => {
+  getUser: (): Promise<User> => {
+    return new Promise(resolve => {
       setTimeout(() => {
         const foundUser = localStorage.getItem('user')
-        if (!foundUser) return
-
-        resolve(JSON.parse(foundUser))
-      })
+        /* resolve(JSON.parse(foundUser) ?? foundUser)
+          Es una forma valida tambien, pero tiene un problema con TypeScript
+        */
+        resolve(foundUser && JSON.parse(foundUser))
+      }, 1000)
     })
   },
   addUser: (newUser: UserInput): Promise<User> => {
