@@ -29,12 +29,9 @@ export const HomePage = (): JSX.Element => {
 
   const handleLogout = async () => {
     setIsLoading(true)
-    await new Promise(resolve =>
-      setTimeout(() => {
-        localStorage.removeItem('user')
-        resolve(null)
-      }, 2000)
-    )
+
+    await api.logout()
+
     setUser(null)
     setIsLogged(false)
     setIsLoading(false)

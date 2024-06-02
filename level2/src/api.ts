@@ -9,13 +9,15 @@ export type UserInput = Omit<User, 'id'>
 
 export type UserList = Record<string, User>
 
+const TIMEOUT_MS = 1000
+
 export const api = {
   getUsers: (): Promise<UserList> => {
     return new Promise(resolve => {
       setTimeout(() => {
         const storedUsers = localStorage.getItem('users')
         resolve(storedUsers ? JSON.parse(storedUsers) : {})
-      }, 1000)
+      }, TIMEOUT_MS)
     })
   },
   getUser: (): Promise<User> => {
@@ -26,7 +28,7 @@ export const api = {
           Es una forma valida tambien, pero tiene un problema con TypeScript
         */
         resolve(foundUser && JSON.parse(foundUser))
-      }, 1000)
+      }, TIMEOUT_MS)
     })
   },
   addUser: (newUser: UserInput): Promise<User> => {
@@ -41,7 +43,7 @@ export const api = {
         localStorage.setItem('users', JSON.stringify(userList))
 
         resolve(userList[newUser.email])
-      }, 1000)
+      }, TIMEOUT_MS)
     })
   },
   findUser: (key: string): Promise<User | null> => {
@@ -49,7 +51,7 @@ export const api = {
       setTimeout(() => {
         const storedUsers = localStorage.getItem('users')
         resolve(storedUsers ? JSON.parse(storedUsers)[key] : storedUsers)
-      }, 1000)
+      }, TIMEOUT_MS)
     })
   },
   login: (newUser: User): Promise<User> => {
@@ -57,7 +59,15 @@ export const api = {
       setTimeout(() => {
         localStorage.setItem('user', JSON.stringify(newUser))
         resolve(newUser)
-      }, 1000)
+      }, TIMEOUT_MS)
     })
+  },
+  logout: (): Promise<void> => {
+    return new Promise(resolve =>
+      setTimeout(() => {
+        localStorage.removeItem('user')
+        resolve()
+      }, TIMEOUT_MS)
+    )
   },
 }
