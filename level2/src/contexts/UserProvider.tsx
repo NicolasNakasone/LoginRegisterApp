@@ -11,6 +11,11 @@ export const UserProvider = ({ children }: { children: JSX.Element }): JSX.Eleme
     agregar ahi el accessToken y lo que haga falta
   */
   const [user, setUser] = useState<User | null>(null)
+
+  /* Agregar un contexto nuevo que sea algo como AuthProvider o algo asi,
+    Para agregar la proteccion/redireccion de rutas y eso, y asi mover
+    esos controles de cada pagina
+  */
   const navigate = useNavigate()
 
   return (
