@@ -36,16 +36,14 @@ export const api = {
     return new Promise(resolve => {
       setTimeout(() => {
         const storedUsers = localStorage.getItem('users')
-        if (!storedUsers) {
-          const firstUser: UserList = { [newUser.email]: { id: `${+new Date()}`, ...newUser } }
-          localStorage.setItem('users', JSON.stringify(firstUser))
-          resolve(firstUser[newUser.email])
-          return
-        }
-        const parsedUsers = JSON.parse(storedUsers) as UserList
-        parsedUsers[newUser.email] = { id: `${+new Date()}`, ...newUser }
-        localStorage.setItem('users', JSON.stringify(parsedUsers))
-        resolve(parsedUsers[newUser.email])
+        let userList: UserList = {}
+
+        if (storedUsers) userList = JSON.parse(storedUsers)
+
+        userList[newUser.email] = { id: `${+new Date()}`, ...newUser }
+        localStorage.setItem('users', JSON.stringify(userList))
+
+        resolve(userList[newUser.email])
       }, 1000)
     })
   },
