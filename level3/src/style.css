@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+
+  & > main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+h1 {
+  margin: 1rem 0;
+  font-size: 1.5rem
+}
+
+form {
+  min-height: 20rem;
+  margin: 20vh 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+input {
+  padding: 0 0.25rem;
+  font-family: Inter;
+  font-size: 1.25rem;
+  border-color: CanvasText; 
+  border-radius: 0.25rem;
+  
+  &::placeholder {
+    color: CanvasText;
+    font-size: 1rem;
+    opacity: 0.5;
+  }
+}
+
+button {
+  font-size: 1rem;
+  padding: 0.25rem 0.75rem;
+}
+
+button[type="submit"] {
+  width: 100%;
+}
+
+/* Para seleccionar solo los p que esten dentro de un form.
+  Sino afecta a todos los p y no es la idea
+*/
+form > p {
+  &:last-child {
+    margin: auto auto 0;
+  }
+}
+
+/* form > button[type="button"] {
+  border: 1px solid blue;
+} */
