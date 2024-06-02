@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react'
 
-import { User } from 'src/api'
+import { api } from 'src/api'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
@@ -10,23 +10,21 @@ export const HomePage = (): JSX.Element => {
 
   const { isLoading, setIsLoading } = useFormStatus()
 
-  const asyncSetUser = async () => {
+  const setUserFromStorage = async () => {
+    // Para evitar ejecutar todo el codigo si el user ya esta seteado
     if (user) return
 
-    let foundUser = localStorage.getItem('user')
+    const foundUser = await api.getUser()
     if (!foundUser) {
       navigate(routes.login)
       return
     }
-    foundUser = JSON.parse(foundUser)
-    return await new Promise(resolve => {
-      setTimeout(() => setUser(foundUser as unknown as User), 1000)
-      resolve(null)
-    })
+    setUser(foundUser)
+    return
   }
 
   useEffect(() => {
-    asyncSetUser()
+    setUserFromStorage()
   }, [])
 
   const handleLogout = async () => {

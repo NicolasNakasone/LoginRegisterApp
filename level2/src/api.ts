@@ -21,6 +21,16 @@ export const api = {
       }, 1000)
     })
   },
+  getUser: async (): Promise<User> => {
+    return await new Promise(resolve => {
+      setTimeout(() => {
+        const foundUser = localStorage.getItem('user')
+        if (!foundUser) return
+
+        resolve(JSON.parse(foundUser))
+      })
+    })
+  },
   addUser: (newUser: UserInput): Promise<User> => {
     return new Promise(resolve => {
       const storedUsers = localStorage.getItem('users')
