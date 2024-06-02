@@ -13,11 +13,10 @@ export const api = {
   getUsers: (): Promise<UserList> => {
     return new Promise(resolve => {
       const storedUsers = localStorage.getItem('users')
-      if (!storedUsers) return
+      if (!storedUsers) return resolve({})
 
       setTimeout(() => {
-        const mappedUsers = JSON.parse(storedUsers) as UserList
-        resolve(mappedUsers)
+        resolve(JSON.parse(storedUsers))
       }, 1000)
     })
   },
