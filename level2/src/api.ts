@@ -12,11 +12,9 @@ export type UserList = Record<string, User>
 export const api = {
   getUsers: (): Promise<UserList> => {
     return new Promise(resolve => {
-      const storedUsers = localStorage.getItem('users')
-      if (!storedUsers) return resolve({})
-
       setTimeout(() => {
-        resolve(JSON.parse(storedUsers))
+        const storedUsers = localStorage.getItem('users')
+        resolve(storedUsers ? JSON.parse(storedUsers) : {})
       }, 1000)
     })
   },
@@ -50,10 +48,7 @@ export const api = {
     return new Promise(resolve => {
       setTimeout(() => {
         const storedUsers = localStorage.getItem('users')
-        if (!storedUsers) return resolve(null)
-
-        const mappedUsers = JSON.parse(storedUsers) as UserList
-        resolve(mappedUsers[key])
+        resolve(storedUsers ? JSON.parse(storedUsers)[key] : storedUsers)
       }, 1000)
     })
   },
