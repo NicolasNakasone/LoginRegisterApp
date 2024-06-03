@@ -1,5 +1,5 @@
-import express from 'express'
 import { configDotenv } from 'dotenv'
+import express from 'express'
 
 configDotenv()
 
