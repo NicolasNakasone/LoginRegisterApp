@@ -11,9 +11,10 @@ export const server = express()
 
 server.set('port', API_PORT || 4001)
 
-server.use('/', router)
-
 server.use(logger('dev'))
+server.use(express.json({ limit: '50mb' }))
+
+server.use('/', router)
 
 server.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
