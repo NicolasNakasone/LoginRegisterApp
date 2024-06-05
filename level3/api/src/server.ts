@@ -1,13 +1,14 @@
-import { configDotenv } from 'dotenv'
-import express from 'express'
+import dotenv from 'dotenv'
+import express, { NextFunction, Request, Response } from 'express'
+import logger from 'morgan'
+import { router } from 'src/routes'
 
-configDotenv()
+dotenv.config()
 
-const API_PORT = process.env.API_PORT || 4000
+const { API_PORT } = process.env
 
 export const server = express()
-server.set('port', API_PORT)
 
-server.get('/', (req, res) => {
-  res.send('LoginRegister API')
-})
+server.set('port', API_PORT || 4001)
+
+server.use('/', router)
