@@ -12,3 +12,5 @@ export const server = express()
 server.set('port', API_PORT || 4001)
 
 server.use('/', router)
+
+server.use(logger('dev'))
