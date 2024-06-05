@@ -10,6 +10,6 @@ type Routes = {
 
 export const routes: Routes = {
   home: '/',
-  login: '/inicio-de-sesion',
-  register: '/registro',
+  login: '/login',
+  register: '/register',
 }
