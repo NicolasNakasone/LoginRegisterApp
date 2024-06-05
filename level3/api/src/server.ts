@@ -22,3 +22,12 @@ server.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
   next()
 })
+
+server.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error Type Error does not include status
+  const status = err.status || 500
+  const message = err.message /* || err */ || 'Internal Server Error'
+  console.error(err)
+  res.status(status).send(message)
+  next()
+})
