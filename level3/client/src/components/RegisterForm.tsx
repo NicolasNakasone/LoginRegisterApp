@@ -1,10 +1,11 @@
 import { FormEvent, memo, useContext } from 'react'
 
 import { Link } from 'react-router-dom'
-import { api } from 'src/api'
+import { UserInput } from 'src/api'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
+import { ResponseError } from 'src/types'
 
 export const RegisterForm = (): JSX.Element => {
   const { navigate } = useContext(UserContext)
@@ -23,16 +24,6 @@ export const RegisterForm = (): JSX.Element => {
     const password = target[2] as HTMLInputElement
     const re_password = target[3] as HTMLInputElement
 
-    if (await api.findUser(email.value)) {
-      full_name.value = ''
-      email.value = ''
-      password.value = ''
-      re_password.value = ''
-      setError('❌ Usuario ya registrado')
-      setIsLoading(false)
-      return
-    }
-
     /* TODO: Para evitar tantos if, hacer un handleErrors que reciba
       key = 'errorName', y devuelva un true o algo si hay un error
       sino que devuelva otra cosa si todos los error checks pasaron.
@@ -48,7 +39,33 @@ export const RegisterForm = (): JSX.Element => {
       return
     }
 
-    await api.addUser({ full_name: full_name.value, email: email.value, password: password.value })
+    // Todo esto se debe mover a otro archivo o constante, lo que sea
+
+    const userInput: UserInput = {
+      email: email.value,
+      full_name: full_name.value,
+      password: password.value,
+    }
+
+    const registerUser = await fetch(`http://localhost:3000/register`, {
+      method: 'POST',
+      body: JSON.stringify(userInput),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+    })
+    const response = (await registerUser.json()) as ResponseError
+
+    if (response.code === 'USER_ALREADY_EXISTS') {
+      full_name.value = ''
+      email.value = ''
+      password.value = ''
+      re_password.value = ''
+      setError(response.message)
+      setIsLoading(false)
+      return
+    }
 
     navigate(routes.login)
     setIsLoading(false)
