@@ -18,15 +18,6 @@ registerRouter.post('/', (req, res, next) => {
     if (foundUser)
       res.send({ code: 'USER_ALREADY_EXISTS', message: '❌ Usuario ya registrado' } as Error)
 
-    // No tiene sentido esto ya que no existe el usuario todavia
-    // En todo caso algo que se puede hacer es hashear la password
-    /* Esta validacion viene del front, donde se comparan los campos
-      password y re_password, pero el back no recibe re_password (y creo
-      no deberia recibir)
-    */
-    if (password !== foundUser.password)
-      res.send({ code: 'PASSWORD_NOT_MATCH', message: '❌ Contraseñas no coinciden' } as Error)
-
     userList[email] = { id: `${+new Date()}`, ...{ email, full_name, password } }
 
     res.send(userList[email])
