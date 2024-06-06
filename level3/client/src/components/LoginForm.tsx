@@ -1,10 +1,11 @@
 import { FormEvent, memo, useContext, useState } from 'react'
 
 import { Link } from 'react-router-dom'
-import { User, api } from 'src/api'
+import { User } from 'src/api'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
+import { ResponseError } from 'src/types'
 
 export const LoginForm = (): JSX.Element => {
   const { setIsLogged, setUser, navigate } = useContext(UserContext)
@@ -21,7 +22,21 @@ export const LoginForm = (): JSX.Element => {
     const email = target[0] as HTMLInputElement
     const password = target[1] as HTMLInputElement
 
-    const foundUser = await api.findUser(email.value)
+    const loggedUser: Omit<User, 'id' | 'full_name'> = {
+      email: email.value,
+      password: password.value,
+    }
+
+    const loginUser = await fetch(`http://localhost:3000/login`, {
+      method: 'POST',
+      body: JSON.stringify(loggedUser),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+    })
+
+    const response = (await loginUser.json()) as ResponseError
 
     /* Mas adelante cuando exista la API real y no la constante, se puede
       mandar toda la logica de validaciones como si no encontro el usuario
@@ -31,30 +46,36 @@ export const LoginForm = (): JSX.Element => {
       la respuesta o error, y dejar al front solo con responsabilidades como
       limpiar el formulario, actualizar estados, etc.
     */
-    if (!foundUser) {
+    if (response.code === 'USER_NOT_EXISTS') {
       email.value = ''
       password.value = ''
-      setError('❌ Usuario no registrado')
+      setError(response.message)
       setIsLoading(false)
-      // Solo necesario el return si foundUser esta tipado como undefined
       return
     }
 
-    const isSameEmail = foundUser.email === email.value
-    const isSamePassword = foundUser.password === password.value
+    if (response.code === 'EMAIL_NOT_MATCH') {
+      email.value = ''
+      setError(response.message)
+      setIsLoading(false)
+      return
+    }
 
-    if (!(isSameEmail && isSamePassword)) {
+    /* Esto no tiene mucho sentido, de ultima dejar solo una validacion
+      porque estar limpiando el email y no el password, para que despues
+      el password si esta mal se limpie el password y no el email.
+      Directamente limpiar los dos campos de ultima y ya
+    */
+
+    if (response.code === 'PASSWORD_NOT_MATCH') {
       password.value = ''
-      setError('❌ Contraseña incorrecta')
+      setError(response.message)
       setIsLoading(false)
       return
     }
 
-    const newUser: User = structuredClone(foundUser)
+    const newUser = response as unknown as User
     setUser(newUser)
-
-    await api.login(newUser)
-
     setIsLogged(true)
     setIsLoading(false)
     navigate(routes.home)
