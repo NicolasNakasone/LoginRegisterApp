@@ -8,7 +8,7 @@ export interface User {
 /* Esto despues puede ser algo que tenga el code como un enum, cosa de
   copiar ese enum al front para no tener que manejar strings
 */
-export interface Error {
+export interface ResponseError {
   code: string
   message: string
 }

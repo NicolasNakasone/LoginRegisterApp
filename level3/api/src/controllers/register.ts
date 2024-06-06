@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { userList } from 'src/mocks/userList'
-import { Error } from 'src/types'
+import { ResponseError } from 'src/types'
 
 export const registerUser: RequestHandler = (req, res, next) => {
   try {
@@ -9,7 +9,10 @@ export const registerUser: RequestHandler = (req, res, next) => {
     const foundUser = userList[email]
 
     if (foundUser)
-      res.send({ code: 'USER_ALREADY_EXISTS', message: '❌ Usuario ya registrado' } as Error)
+      res.send({
+        code: 'USER_ALREADY_EXISTS',
+        message: '❌ Usuario ya registrado',
+      } as ResponseError)
 
     userList[email] = { id: `${+new Date()}`, ...{ email, full_name, password } }
 

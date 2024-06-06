@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { userList } from 'src/mocks/userList'
-import { Error } from 'src/types'
+import { ResponseError } from 'src/types'
 
 export const loginUser: RequestHandler = (req, res, next) => {
   try {
@@ -9,7 +9,7 @@ export const loginUser: RequestHandler = (req, res, next) => {
     const foundUser = userList[email]
 
     if (!foundUser)
-      res.send({ code: 'USER_NOT_EXISTS', message: '❌ Usuario no registrado' } as Error)
+      res.send({ code: 'USER_NOT_EXISTS', message: '❌ Usuario no registrado' } as ResponseError)
 
     const isSameEmail = foundUser.email === email
     const isSamePassword = foundUser.password === password
@@ -21,10 +21,13 @@ export const loginUser: RequestHandler = (req, res, next) => {
       funcione asi { [key]: User })
     */
     if (!isSameEmail)
-      res.send({ code: 'EMAIL_NOT_MATCH', message: '❌ Correo incorrecto' } as Error)
+      res.send({ code: 'EMAIL_NOT_MATCH', message: '❌ Correo incorrecto' } as ResponseError)
 
     if (!isSamePassword)
-      res.send({ code: 'PASSWORD_NOT_MATCH', message: '❌ Contraseña incorrecta' } as Error)
+      res.send({
+        code: 'PASSWORD_NOT_MATCH',
+        message: '❌ Contraseña incorrecta',
+      } as ResponseError)
 
     res.send(foundUser)
   } catch (error) {
