@@ -35,7 +35,6 @@ export const LoginForm = (): JSX.Element => {
         'Content-Type': 'application/json',
       },
     })
-
     const response = (await loginUser.json()) as ResponseError
 
     /* Mas adelante cuando exista la API real y no la constante, se puede
@@ -46,28 +45,12 @@ export const LoginForm = (): JSX.Element => {
       la respuesta o error, y dejar al front solo con responsabilidades como
       limpiar el formulario, actualizar estados, etc.
     */
-    if (response.code === 'USER_NOT_EXISTS') {
-      email.value = ''
-      password.value = ''
-      setError(response.message)
-      setIsLoading(false)
-      return
-    }
 
-    if (response.code === 'EMAIL_NOT_MATCH') {
-      email.value = ''
-      setError(response.message)
-      setIsLoading(false)
-      return
-    }
-
-    /* Esto no tiene mucho sentido, de ultima dejar solo una validacion
-      porque estar limpiando el email y no el password, para que despues
-      el password si esta mal se limpie el password y no el email.
-      Directamente limpiar los dos campos de ultima y ya
+    /* Por ahora, esto me parece mejor que tener tres if
+      que al final hacen practicamennte lo mismo 
     */
-
-    if (response.code === 'PASSWORD_NOT_MATCH') {
+    if (response.code) {
+      email.value = ''
       password.value = ''
       setError(response.message)
       setIsLoading(false)
