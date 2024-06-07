@@ -1,7 +1,7 @@
 import { FormEvent, memo, useContext, useState } from 'react'
 
 import { Link } from 'react-router-dom'
-import { User } from 'src/api'
+import { LoginInput, PublicUser } from 'src/api'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
@@ -22,7 +22,7 @@ export const LoginForm = (): JSX.Element => {
     const email = target[0] as HTMLInputElement
     const password = target[1] as HTMLInputElement
 
-    const loggedUser: Omit<User, 'id' | 'full_name'> = {
+    const loggedUser: LoginInput = {
       email: email.value,
       password: password.value,
     }
@@ -57,7 +57,7 @@ export const LoginForm = (): JSX.Element => {
       return
     }
 
-    const newUser = response as unknown as User
+    const newUser = response as unknown as PublicUser
     localStorage.setItem('user', JSON.stringify(newUser))
     setUser(newUser)
     setIsLogged(true)
