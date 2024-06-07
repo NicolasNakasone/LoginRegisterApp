@@ -12,7 +12,7 @@ export const server = express()
 
 server.use(
   cors({
-    origin: 'http://localhost:5173', // Reemplaza esto con el origen de tu aplicación React
+    origin: 'http://localhost:5173',
     credentials: true,
   })
 )
