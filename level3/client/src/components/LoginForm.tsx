@@ -58,6 +58,7 @@ export const LoginForm = (): JSX.Element => {
     }
 
     const newUser = response as unknown as User
+    localStorage.setItem('user', JSON.stringify(newUser))
     setUser(newUser)
     setIsLogged(true)
     setIsLoading(false)
