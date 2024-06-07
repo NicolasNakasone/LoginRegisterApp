@@ -1,12 +1,15 @@
+import bcrypt from 'bcrypt'
 import { RequestHandler } from 'express'
 import { userList } from 'src/mocks/userList'
 import { ResponseError } from 'src/types'
 
-export const registerUser: RequestHandler = (req, res, next) => {
+export const registerUser: RequestHandler = async (req, res, next) => {
   try {
-    const { email, full_name, password } = req.body
+    const { email, full_name, password: plainTextPassword } = req.body
 
     const foundUser = userList[email]
+
+    const hashedPassword = await bcrypt.hash(plainTextPassword, 10)
 
     if (foundUser)
       res.send({
@@ -14,7 +17,7 @@ export const registerUser: RequestHandler = (req, res, next) => {
         message: '❌ Usuario ya registrado',
       } as ResponseError)
 
-    userList[email] = { id: `${+new Date()}`, ...{ email, full_name, password } }
+    userList[email] = { id: `${+new Date()}`, ...{ email, full_name, password: hashedPassword } }
 
     res.send(userList[email])
   } catch (error) {
