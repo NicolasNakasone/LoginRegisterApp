@@ -1,10 +1,11 @@
+import bcrypt from 'bcrypt'
 import { RequestHandler } from 'express'
 import { userList } from 'src/mocks/userList'
 import { ResponseError } from 'src/types'
 
-export const loginUser: RequestHandler = (req, res, next) => {
+export const loginUser: RequestHandler = async (req, res, next) => {
   try {
-    const { email, password } = req.body
+    const { email, password: plainTextPassword } = req.body
 
     const foundUser = userList[email]
 
@@ -12,7 +13,7 @@ export const loginUser: RequestHandler = (req, res, next) => {
       res.send({ code: 'USER_NOT_EXISTS', message: '❌ Usuario no registrado' } as ResponseError)
 
     const isSameEmail = foundUser.email === email
-    const isSamePassword = foundUser.password === password
+    const isSamePassword = await bcrypt.compare(plainTextPassword, foundUser.password)
 
     /* No tiene sentido esto ya que para llegar aca tuvo que encontrar al user
       por medio de la key que es siempre el email, y logicamente nunca se va a
