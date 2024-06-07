@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import { RequestHandler } from 'express'
 import { userList } from 'src/mocks/userList'
-import { ResponseError } from 'src/types'
+import { PublicUser, ResponseError } from 'src/types'
 
 export const loginUser: RequestHandler = async (req, res, next) => {
   try {
@@ -30,7 +30,12 @@ export const loginUser: RequestHandler = async (req, res, next) => {
         message: '❌ Contraseña incorrecta',
       } as ResponseError)
 
-    res.send(foundUser)
+    const id = userList[email].id
+    const full_name = userList[email].full_name
+
+    const newPublicUser: PublicUser = { id, email, full_name }
+
+    res.send(newPublicUser)
   } catch (error) {
     next(error)
   }
