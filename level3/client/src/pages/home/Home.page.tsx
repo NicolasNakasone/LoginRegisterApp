@@ -14,6 +14,9 @@ export const HomePage = (): JSX.Element => {
     // Para evitar ejecutar todo el codigo si el user ya esta seteado
     if (user) return
 
+    // Revisar sesion iniciada si la base de datos se borro
+    // De ultima cambiar este metodo por un fetch al server
+    // revisando si el user existe en la bd
     const foundUser = await api.getUser()
     if (!foundUser) {
       navigate(routes.login)
