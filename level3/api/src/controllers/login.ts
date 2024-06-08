@@ -1,19 +1,21 @@
 import bcrypt from 'bcrypt'
 import { RequestHandler } from 'express'
-import { userList } from 'src/mocks/userList'
+import { UserModel } from 'src/models/user.model'
 import { PublicUser, ResponseError } from 'src/types'
 
 export const loginUser: RequestHandler = async (req, res, next) => {
   try {
     const { email, password: plainTextPassword } = req.body
 
-    const foundUser = userList[email]
+    const existingUser = await UserModel.findOne({ where: { email } })
 
-    if (!foundUser)
+    if (!existingUser) {
       res.send({ code: 'USER_NOT_EXISTS', message: '❌ Usuario no registrado' } as ResponseError)
+      return
+    }
 
-    const isSameEmail = foundUser.email === email
-    const isSamePassword = await bcrypt.compare(plainTextPassword, foundUser.password)
+    const isSameEmail = existingUser.email === email
+    const isSamePassword = await bcrypt.compare(plainTextPassword, existingUser.password)
 
     /* No tiene sentido esto ya que para llegar aca tuvo que encontrar al user
       por medio de la key que es siempre el email, y logicamente nunca se va a
@@ -30,8 +32,8 @@ export const loginUser: RequestHandler = async (req, res, next) => {
         message: '❌ Contraseña incorrecta',
       } as ResponseError)
 
-    const id = userList[email].id
-    const full_name = userList[email].full_name
+    const id = existingUser.id
+    const full_name = existingUser.full_name
 
     const newPublicUser: PublicUser = { id, email, full_name }
 
