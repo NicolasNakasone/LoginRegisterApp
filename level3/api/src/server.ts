@@ -1,23 +1,20 @@
 import cors from 'cors'
-import dotenv from 'dotenv'
 import express, { NextFunction, Request, Response } from 'express'
 import logger from 'morgan'
 import { router } from 'src/routes'
 
-dotenv.config()
-
-const { API_PORT } = process.env
+const { API_PORT, CLIENT_URL } = process.env
 
 export const server = express()
 
 server.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: CLIENT_URL,
     credentials: true,
   })
 )
 
-server.set('port', API_PORT || 4001)
+server.set('port', API_PORT || 4000)
 
 server.use(logger('dev'))
 server.use(express.json({ limit: '50mb' }))
