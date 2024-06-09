@@ -1,10 +1,8 @@
 import bcrypt from 'bcrypt'
 import { RequestHandler } from 'express'
-import jwt from 'jsonwebtoken'
+import { generateTokens } from 'src/authentication'
 import { UserModel } from 'src/models/user.model'
 import { AuthenticatedUser, ResponseError } from 'src/types'
-
-const { JWT_SECRET } = process.env
 
 export const loginUser: RequestHandler = async (req, res, next) => {
   try {
@@ -38,13 +36,11 @@ export const loginUser: RequestHandler = async (req, res, next) => {
     const id = existingUser.id
     const full_name = existingUser.full_name
 
-    const access_token = jwt.sign({ id, email, full_name }, JWT_SECRET || '12345678', {
-      expiresIn: '1m',
-    })
+    const generatedTokens = generateTokens({ id, email, full_name })
 
     const newPublicUser: AuthenticatedUser = {
       userData: { id, email, full_name },
-      accessToken: access_token,
+      accessToken: generatedTokens.accessToken,
     }
 
     res.send(newPublicUser)
