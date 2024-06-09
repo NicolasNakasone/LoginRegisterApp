@@ -1,4 +1,3 @@
-// TODO: Tipar los parametros de las funciones
 import { RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
 import { PublicUser } from 'src/types'
