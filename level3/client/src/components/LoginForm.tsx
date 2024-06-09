@@ -1,7 +1,7 @@
 import { FormEvent, memo, useContext, useState } from 'react'
 
 import { Link } from 'react-router-dom'
-import { LoginInput, PublicUser } from 'src/api'
+import { AuthenticatedUser, LoginInput } from 'src/api'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
@@ -27,6 +27,9 @@ export const LoginForm = (): JSX.Element => {
       password: password.value,
     }
 
+    // Manejar errores si el server falla, un error de TypeScript
+    // que pare el servidor va a hacer que las requests
+    // manden error y el front quede parado
     const loginUser = await fetch(`http://localhost:3000/login`, {
       method: 'POST',
       body: JSON.stringify(loggedUser),
@@ -57,7 +60,7 @@ export const LoginForm = (): JSX.Element => {
       return
     }
 
-    const newUser = response as unknown as PublicUser
+    const newUser = response as unknown as AuthenticatedUser
     localStorage.setItem('user', JSON.stringify(newUser))
     setUser(newUser)
     setIsLogged(true)

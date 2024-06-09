@@ -1,14 +1,14 @@
 import { SetStateAction, createContext } from 'react'
 
 import { NavigateFunction } from 'react-router-dom'
-import { PublicUser } from 'src/api'
+import { AuthenticatedUser } from 'src/api'
 
 interface UserContextProps {
   isLogged: boolean
-  user: PublicUser | null
+  user: AuthenticatedUser | null
   navigate: NavigateFunction
   setIsLogged(value: SetStateAction<boolean>): void
-  setUser(value: SetStateAction<PublicUser | null>): void
+  setUser(value: SetStateAction<AuthenticatedUser | null>): void
 }
 
 export const UserContext = createContext<UserContextProps>({

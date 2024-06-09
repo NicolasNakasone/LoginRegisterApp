@@ -46,7 +46,7 @@ export const HomePage = (): JSX.Element => {
 
   return (
     <>
-      <h1>Bienvenido {user?.full_name}</h1>
+      <h1>Bienvenido {user?.userData.full_name}</h1>
       <button disabled={isLoading} onClick={handleLogout}>
         Cerrar sesion
       </button>
