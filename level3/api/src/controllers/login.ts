@@ -35,12 +35,12 @@ export const loginUser: RequestHandler = async (req, res, next) => {
         message: '❌ Contraseña incorrecta',
       } as ResponseError)
 
-    const access_token = jwt.sign({ id: existingUser?.id }, JWT_SECRET || '12345678', {
-      expiresIn: '1h',
-    })
-
     const id = existingUser.id
     const full_name = existingUser.full_name
+
+    const access_token = jwt.sign({ id, email, full_name }, JWT_SECRET || '12345678', {
+      expiresIn: '1m',
+    })
 
     const newPublicUser: AuthenticatedUser = {
       userData: { id, email, full_name },
