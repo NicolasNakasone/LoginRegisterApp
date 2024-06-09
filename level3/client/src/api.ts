@@ -10,6 +10,11 @@ export type PublicUser = Omit<User, 'password'>
 export type UserInput = Omit<User, 'id'>
 export type LoginInput = Omit<User, 'id' | 'full_name'>
 
+export interface AuthenticatedUser {
+  userData: PublicUser
+  accessToken: string | null
+}
+
 // export type UserList = Record<string, User>
 
 const TIMEOUT_MS = 1000
@@ -23,10 +28,15 @@ export const api = {
   //     }, TIMEOUT_MS)
   //   })
   // },
-  getUser: (): Promise<PublicUser> => {
+  getUser: (): Promise<AuthenticatedUser> => {
     return new Promise(resolve => {
       setTimeout(() => {
         const foundUser = localStorage.getItem('user')
+
+        // Esto lo sigo cuando tenga el JWT, asi tiene mas sentido
+        // const getUser = fetch(
+        //   `https://localhost:3000/users/${(foundUser as unknown as PublicUser)?.id}`
+        // )
         /* resolve(JSON.parse(foundUser) ?? foundUser)
           Es una forma valida tambien, pero tiene un problema con TypeScript
         */
