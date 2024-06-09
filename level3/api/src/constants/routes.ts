@@ -2,6 +2,7 @@ enum RouteKeys {
   home = 'home',
   login = 'login',
   register = 'register',
+  users = 'users',
 }
 
 type Routes = {
@@ -12,4 +13,5 @@ export const routes: Routes = {
   home: '/',
   login: '/login',
   register: '/register',
+  users: '/users',
 }
