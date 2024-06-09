@@ -1,7 +1,10 @@
 import bcrypt from 'bcrypt'
 import { RequestHandler } from 'express'
+import jwt from 'jsonwebtoken'
 import { UserModel } from 'src/models/user.model'
-import { PublicUser, ResponseError } from 'src/types'
+import { AuthenticatedUser, ResponseError } from 'src/types'
+
+const { JWT_SECRET } = process.env
 
 export const loginUser: RequestHandler = async (req, res, next) => {
   try {
@@ -32,10 +35,17 @@ export const loginUser: RequestHandler = async (req, res, next) => {
         message: '❌ Contraseña incorrecta',
       } as ResponseError)
 
+    const access_token = jwt.sign({ id: existingUser?.id }, JWT_SECRET || '12345678', {
+      expiresIn: '1h',
+    })
+
     const id = existingUser.id
     const full_name = existingUser.full_name
 
-    const newPublicUser: PublicUser = { id, email, full_name }
+    const newPublicUser: AuthenticatedUser = {
+      userData: { id, email, full_name },
+      accessToken: access_token,
+    }
 
     res.send(newPublicUser)
   } catch (error) {
