@@ -26,10 +26,11 @@ export const LoginForm = (): JSX.Element => {
       email: email.value,
       password: password.value,
     }
-
-    // Manejar errores si el server falla, un error de TypeScript
-    // que pare el servidor va a hacer que las requests
-    // manden error y el front quede parado
+    /* TODO: Manejar errores si el server falla, un error de TypeScript 
+      que pare el servidor va a hacer que las requests
+      manden error y el front quede parado 
+      (ej: un boton submit queda en pending)
+    */
     const loginUser = await fetch(`http://localhost:3000/login`, {
       method: 'POST',
       body: JSON.stringify(loggedUser),
