@@ -13,11 +13,55 @@ export type LoginInput = Omit<User, 'id' | 'full_name'>
 export interface AuthenticatedUser {
   userData: PublicUser
   accessToken: string | null
+  refreshToken: string | null
 }
 
-// export type UserList = Record<string, User>
-
 const TIMEOUT_MS = 1000
+
+// TODO: Refactorizar/corregir
+async function handleFetch(
+  url: RequestInfo,
+  options?: RequestInit | undefined
+): Promise<Response | null> {
+  const user = localStorage.getItem('user')
+
+  if (!user) return null
+
+  const { refreshToken, userData } = JSON.parse(user) as AuthenticatedUser
+
+  const response = await fetch(url, options)
+
+  if (response.status === 401) {
+    // Token expirado, renovar
+    const refreshResponse = await fetch('http://localhost:3000/refresh-token', {
+      method: 'POST',
+      body: JSON.stringify({ refreshToken }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    if (refreshResponse.ok) {
+      const { accessToken: newAccessToken } = await refreshResponse.json()
+
+      const userMapped: AuthenticatedUser = {
+        accessToken: newAccessToken,
+        refreshToken,
+        userData,
+      }
+      localStorage.setItem('user', JSON.stringify(userMapped))
+
+      // Reintentar la request original
+      return handleFetch(url, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${newAccessToken}`,
+        },
+      })
+    } else {
+      return refreshResponse
+    }
+  }
+  return response
+}
 
 export const api = {
   // getUsers: (): Promise<UserList> => {
@@ -28,19 +72,42 @@ export const api = {
   //     }, TIMEOUT_MS)
   //   })
   // },
-  getUser: (): Promise<AuthenticatedUser> => {
+  getUser: (): Promise<AuthenticatedUser | null> => {
     return new Promise(resolve => {
-      setTimeout(() => {
+      setTimeout(async () => {
         const foundUser = localStorage.getItem('user')
+        if (!foundUser) {
+          resolve(null)
+          return
+        }
 
-        // Esto lo sigo cuando tenga el JWT, asi tiene mas sentido
-        // const getUser = fetch(
-        //   `https://localhost:3000/users/${(foundUser as unknown as PublicUser)?.id}`
-        // )
         /* resolve(JSON.parse(foundUser) ?? foundUser)
           Es una forma valida tambien, pero tiene un problema con TypeScript
         */
-        resolve(foundUser && JSON.parse(foundUser))
+
+        const typedUser: AuthenticatedUser = JSON.parse(foundUser)
+
+        const getWithHandleFetch = handleFetch(
+          `http://localhost:3000/users/${typedUser.userData.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${typedUser.accessToken}`,
+              'Content-Type': 'application/json',
+            },
+            method: 'GET',
+          }
+        )
+
+        const userResponse = await getWithHandleFetch
+
+        const publicUser: PublicUser = await userResponse?.json()
+        if (!publicUser?.id) resolve(null)
+
+        // La idea es devolver el mismo usuario logueado
+        // Es decir, un AuthenticatedUser
+        // Para esto habra que realizar algo mas coherente en el servidor
+        // Ya que se envia el token pero no se verifica en el servidor
+        resolve(typedUser)
       }, TIMEOUT_MS)
     })
   },

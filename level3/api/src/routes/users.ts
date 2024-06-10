@@ -1,11 +1,12 @@
 // No se si sera necesaria realmente, quizas una para getear users...
 import express from 'express'
+import { authenticateToken } from 'src/authentication'
 import { UserModel } from 'src/models/user.model'
 import { PublicUser, ResponseError } from 'src/types'
 
 export const usersRouter = express.Router()
 
-usersRouter.get('/:id', async (req, res, next) => {
+usersRouter.get('/:id', authenticateToken, async (req, res, next) => {
   try {
     const { id } = req.params
 
@@ -23,7 +24,7 @@ usersRouter.get('/:id', async (req, res, next) => {
       full_name: foundUser.full_name,
     }
 
-    res.send(publicUser)
+    res.status(200).send(publicUser)
   } catch (error) {
     next(error)
   }
