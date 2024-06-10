@@ -10,6 +10,7 @@ export type PublicUser = Omit<User, 'password'>
 export interface AuthenticatedUser {
   userData: PublicUser
   accessToken: string | null
+  refreshToken: string | null
 }
 
 /* Esto despues puede ser algo que tenga el code como un enum, cosa de

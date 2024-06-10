@@ -41,6 +41,7 @@ export const loginUser: RequestHandler = async (req, res, next) => {
     const newPublicUser: AuthenticatedUser = {
       userData: { id, email, full_name },
       accessToken: generatedTokens.accessToken,
+      refreshToken: generatedTokens.refreshToken,
     }
 
     res.send(newPublicUser)
