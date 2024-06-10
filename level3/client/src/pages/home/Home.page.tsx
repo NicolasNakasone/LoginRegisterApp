@@ -19,7 +19,7 @@ export const HomePage = (): JSX.Element => {
     // revisando si el user existe en la bd
     const foundUser = await api.getUser()
     if (!foundUser) {
-      navigate(routes.login)
+      handleLogout()
       return
     }
     setUser(foundUser)
