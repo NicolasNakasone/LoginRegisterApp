@@ -1,4 +1,3 @@
-import { RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
 import { PublicUser } from 'src/types'
 
@@ -16,14 +15,14 @@ export const generateTokens = ({ id, email, full_name }: PublicUser) => {
 }
 
 // Middleware para verificar el token JWT en las solicitudes
-export const authenticateToken: RequestHandler = (req, res, next) => {
-  const token = req.headers['authorization']
-  if (!token) return res.sendStatus(401)
+// export const authenticateToken: RequestHandler = (req, res, next) => {
+//   const token = req.headers['authorization']
+//   if (!token) return res.sendStatus(401)
 
-  jwt.verify(token, JWT_SECRET || '12345678', (err, user) => {
-    if (err) return res.sendStatus(403)
+//   jwt.verify(token, JWT_SECRET || '12345678', (err, user) => {
+//     if (err) return res.sendStatus(403)
 
-    // req.user = user
-    next()
-  })
-}
+//     // req.user = user
+//     next()
+//   })
+// }
