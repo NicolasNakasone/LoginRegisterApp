@@ -7,6 +7,8 @@ import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
 import { ResponseError } from 'src/types'
 
+const { VITE_API_URL } = import.meta.env
+
 export const LoginForm = (): JSX.Element => {
   const { setIsLogged, setUser, navigate } = useContext(UserContext)
 
@@ -31,7 +33,7 @@ export const LoginForm = (): JSX.Element => {
       manden error y el front quede parado 
       (ej: un boton submit queda en pending)
     */
-    const loginUser = await fetch(`http://localhost:3000/login`, {
+    const loginUser = await fetch(`${VITE_API_URL}/login`, {
       method: 'POST',
       body: JSON.stringify(loggedUser),
       headers: {

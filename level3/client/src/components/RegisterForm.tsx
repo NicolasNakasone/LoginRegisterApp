@@ -7,6 +7,8 @@ import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
 import { ResponseError } from 'src/types'
 
+const { VITE_API_URL } = import.meta.env
+
 export const RegisterForm = (): JSX.Element => {
   const { navigate } = useContext(UserContext)
 
@@ -47,7 +49,7 @@ export const RegisterForm = (): JSX.Element => {
       password: password.value,
     }
 
-    const registerUser = await fetch(`http://localhost:3000/register`, {
+    const registerUser = await fetch(`${VITE_API_URL}/register`, {
       method: 'POST',
       body: JSON.stringify(userInput),
       headers: {

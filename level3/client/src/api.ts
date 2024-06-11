@@ -17,6 +17,7 @@ export interface AuthenticatedUser {
 }
 
 const TIMEOUT_MS = 1000
+const { VITE_API_URL } = import.meta.env
 
 // TODO: Refactorizar/corregir
 async function handleFetch(
@@ -32,10 +33,10 @@ async function handleFetch(
   const { refreshToken, userData } = JSON.parse(user) as AuthenticatedUser
 
   // Token expirado, renovar
-  const refreshResponse = await fetch('http://localhost:3000/refresh-token', {
-    method: 'POST',
+  const refreshResponse = await fetch(`${VITE_API_URL}/refresh-token`, {
     body: JSON.stringify({ refreshToken }),
     headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
   })
   if (!refreshResponse.ok) return refreshResponse
 
@@ -81,16 +82,13 @@ export const api = {
 
         const typedUser: AuthenticatedUser = JSON.parse(foundUser)
 
-        const getWithHandleFetch = handleFetch(
-          `http://localhost:3000/users/${typedUser.userData.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${typedUser.accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            method: 'GET',
-          }
-        )
+        const getWithHandleFetch = handleFetch(`${VITE_API_URL}/users/${typedUser.userData.id}`, {
+          headers: {
+            Authorization: `Bearer ${typedUser.accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
+        })
 
         const userResponse = await getWithHandleFetch
 
