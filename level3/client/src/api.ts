@@ -24,43 +24,37 @@ async function handleFetch(
   options?: RequestInit | undefined
 ): Promise<Response | null> {
   const user = localStorage.getItem('user')
-
   if (!user) return null
+
+  const response = await fetch(url, options)
+  if (!(response.status === 401)) return response
 
   const { refreshToken, userData } = JSON.parse(user) as AuthenticatedUser
 
-  const response = await fetch(url, options)
+  // Token expirado, renovar
+  const refreshResponse = await fetch('http://localhost:3000/refresh-token', {
+    method: 'POST',
+    body: JSON.stringify({ refreshToken }),
+    headers: { 'Content-Type': 'application/json' },
+  })
+  if (!refreshResponse.ok) return refreshResponse
 
-  if (response.status === 401) {
-    // Token expirado, renovar
-    const refreshResponse = await fetch('http://localhost:3000/refresh-token', {
-      method: 'POST',
-      body: JSON.stringify({ refreshToken }),
-      headers: { 'Content-Type': 'application/json' },
-    })
+  const { accessToken: newAccessToken } = await refreshResponse.json()
 
-    if (refreshResponse.ok) {
-      const { accessToken: newAccessToken } = await refreshResponse.json()
-
-      const userMapped: AuthenticatedUser = {
-        accessToken: newAccessToken,
-        refreshToken,
-        userData,
-      }
-      localStorage.setItem('user', JSON.stringify(userMapped))
-
-      // Reintentar la request original
-      return handleFetch(url, {
-        ...options,
-        headers: {
-          Authorization: `Bearer ${newAccessToken}`,
-        },
-      })
-    } else {
-      return refreshResponse
-    }
+  const userMapped: AuthenticatedUser = {
+    accessToken: newAccessToken,
+    refreshToken,
+    userData,
   }
-  return response
+  localStorage.setItem('user', JSON.stringify(userMapped))
+
+  // Reintentar la request original
+  return handleFetch(url, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${newAccessToken}`,
+    },
+  })
 }
 
 export const api = {
