@@ -19,7 +19,12 @@ export const generateTokens = ({ id, email, full_name }: PublicUser) => {
 export const authenticateToken: RequestHandler = (req, res, next) => {
   const authHeader = req.headers.authorization
   if (!authHeader) {
-    res.status(401).send({ message: 'Authorization header required' })
+    /* Cambie el status a 400 porque en el cliente sino entra a refrescar
+      el token cuando en realidad no tiene que seguir si el token no existe.
+      Otra que se puede hacer sino, es devolver el message y en el front
+      si el message es 'jwt expired' recien hacer un post a /refresh-token
+    */
+    res.status(400).send({ message: 'Authorization header required' })
     return
   }
 
