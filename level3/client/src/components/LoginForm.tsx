@@ -79,6 +79,7 @@ export const LoginForm = (): JSX.Element => {
       <button disabled={isLoading} type="submit">
         Iniciar sesión
       </button>
+      <Link to={routes.recoverPassword}>¿Olvidaste tu contraseña?</Link>
       {error && <p>{error}</p>}
       <p>¿No tienes cuenta? {<MemoizedLink />}</p>
     </form>
