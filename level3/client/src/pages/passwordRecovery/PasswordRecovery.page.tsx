@@ -40,6 +40,7 @@ export const PasswordRecoveryPage = () => {
       <h1>Ingresa tu correo para poder reestablecer tu contraseña</h1>
       <form onSubmit={handleSubmit}>
         <input
+          name="email"
           type="email"
           value={email}
           placeholder="Correo"
