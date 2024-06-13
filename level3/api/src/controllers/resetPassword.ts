@@ -26,7 +26,7 @@ export const requestPasswordReset: RequestHandler = async (req, res, next) => {
       full_name: existingUser.full_name,
     }
 
-    const token = jwt.sign(mappedUser, JWT_SECRET, { expiresIn: '1h' })
+    const token = jwt.sign(mappedUser, JWT_SECRET, { expiresIn: '15m' })
 
     const mailSent = await sendResetPasswordEmail(emailFromClient, token)
     if (!mailSent.messageId)
