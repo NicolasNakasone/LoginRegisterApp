@@ -2,6 +2,8 @@ enum RoutesEnum {
   login = 'login',
   register = 'register',
   home = 'home',
+  recoverPassword = 'recoverPassword',
+  resetPassword = 'resetPassword',
 }
 
 type Routes = {
@@ -12,4 +14,6 @@ export const routes: Routes = {
   login: '/iniciar-sesion',
   register: '/registro',
   home: '/',
+  recoverPassword: '/recuperar-contraseña',
+  resetPassword: '/reestablecer-contraseña',
 }
