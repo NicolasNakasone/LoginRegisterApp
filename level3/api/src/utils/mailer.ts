@@ -1,10 +1,10 @@
 import nodemailer from 'nodemailer'
 
-const { CLIENT_URL, MAILER_GMAIL, MAILER_PASSWORD } = process.env
+const { CLIENT_URL, MAILER_GMAIL, MAILER_PASSWORD, MAILER_SMTP_HOST } = process.env
 
 const transporter = nodemailer.createTransport({
   secure: true,
-  host: 'smtp.gmail.com',
+  host: MAILER_SMTP_HOST,
   port: 465,
   auth: {
     user: MAILER_GMAIL,
