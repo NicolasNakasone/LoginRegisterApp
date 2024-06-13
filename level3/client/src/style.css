@@ -68,7 +68,9 @@ button[type="submit"] {
 */
 form > p {
   &:last-child {
+    width: 12vw;
     margin: auto auto 0;
+    text-wrap: balance;
   }
 }
 
