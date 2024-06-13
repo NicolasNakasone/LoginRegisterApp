@@ -4,6 +4,8 @@ enum RouteKeys {
   register = 'register',
   users = 'users',
   refreshToken = 'refreshToken',
+  forgotPassword = 'forgotPassword',
+  resetPassword = 'resetPassword',
 }
 
 type Routes = {
@@ -16,4 +18,6 @@ export const routes: Routes = {
   register: '/register',
   users: '/users',
   refreshToken: '/refresh-token',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password',
 }
