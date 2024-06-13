@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "ts-node -r tsconfig-paths/register index.ts",
-    "dev": "ts-node-dev -r tsconfig-paths/register index.ts",
+    "dev": "ts-node-dev --pretty --transpile-only -r tsconfig-paths/register index.ts",
     "test": "mocha -w ./tests/**/*.spec.js",
     "lint": "eslint . --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,md}\"",
