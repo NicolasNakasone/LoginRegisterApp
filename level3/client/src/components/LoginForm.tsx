@@ -1,7 +1,8 @@
-import { FormEvent, memo, useContext, useState } from 'react'
+import { FormEvent, useContext } from 'react'
 
 import { Link } from 'react-router-dom'
 import { AuthenticatedUser, LoginInput } from 'src/api'
+import { MemoizedLink, PasswordInput } from 'src/components/common'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
@@ -81,26 +82,7 @@ export const LoginForm = (): JSX.Element => {
       </button>
       <Link to={routes.recoverPassword}>¿Olvidaste tu contraseña?</Link>
       {error && <p>{error}</p>}
-      <p>¿No tienes cuenta? {<MemoizedLink />}</p>
+      <p>¿No tienes cuenta? {<MemoizedLink route={routes.register} title="Registrate" />}</p>
     </form>
   )
 }
-
-const PasswordInput = memo((): JSX.Element => {
-  const [isPassword, setIsPassword] = useState(true)
-  const togglePassword = () => {
-    setIsPassword(prevPassword => !prevPassword)
-  }
-  return (
-    <>
-      <input name="password" type={isPassword ? 'password' : 'text'} placeholder="Contraseña" />
-      <button type="button" onClick={togglePassword}>
-        {isPassword ? `Mostrar 🧐` : `Ocultar 😴`}
-      </button>
-    </>
-  )
-})
-
-const MemoizedLink = memo((): JSX.Element => {
-  return <Link to={routes.register}>Registrate</Link>
-})

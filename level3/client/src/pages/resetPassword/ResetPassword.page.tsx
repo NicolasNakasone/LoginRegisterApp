@@ -1,6 +1,7 @@
 import React, { FormEvent, useState } from 'react'
 
 import { Link, useSearchParams } from 'react-router-dom'
+import { PasswordInput } from 'src/components/common'
 import { routes } from 'src/constants/routes'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
 
@@ -8,7 +9,7 @@ const { VITE_API_URL } = import.meta.env
 
 export const ResetPassword = () => {
   const [searchParams] = useSearchParams()
-  const [newPassword, setNewPassword] = useState('')
+  // const [newPassword, setNewPassword] = useState('')
 
   const token = searchParams.get('token')
 
@@ -21,12 +22,16 @@ export const ResetPassword = () => {
     setError('')
     setIsLoading(true)
 
+    const target = event.target as HTMLFormElement
+
+    const newPassword = target[0] as HTMLInputElement
+
     const response = await fetch(`${VITE_API_URL}/reset-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ token, newPassword }),
+      body: JSON.stringify({ token, newPassword: newPassword.value }),
     }).then(res => res.json())
 
     if (!response.id) {
@@ -51,13 +56,7 @@ export const ResetPassword = () => {
     <>
       <h1>Ingresa una nueva contraseña para poder iniciar sesión</h1>
       <form onSubmit={handleSubmit}>
-        <input
-          type="password"
-          value={newPassword}
-          placeholder="Contraseña"
-          required
-          onChange={e => setNewPassword(e.target.value)}
-        />
+        <PasswordInput />
         <button disabled={isLoading} type="submit">
           Reestablecer contraseña
         </button>

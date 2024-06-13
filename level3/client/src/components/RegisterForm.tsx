@@ -1,7 +1,7 @@
-import { FormEvent, memo, useContext } from 'react'
+import { FormEvent, useContext } from 'react'
 
-import { Link } from 'react-router-dom'
 import { UserInput } from 'src/api'
+import { MemoizedLink, PasswordInput } from 'src/components/common'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
@@ -78,17 +78,12 @@ export const RegisterForm = (): JSX.Element => {
     <form onSubmit={handleRegister}>
       <input name={'full_name'} type="text" placeholder="Nombre y apellido" />
       <input name={'email'} type="email" placeholder="Correo" />
-      <input name={'password'} type="password" placeholder="Contraseña" />
-      <input name={'re_password'} type="password" placeholder="Repetir contraseña" />
+      <PasswordInput hasRePassword />
       <button disabled={isLoading} type="submit">
         Registrate
       </button>
       {error && <p>{error}</p>}
-      <p>¿Ya tienes cuenta? {<MemoizedLink />}</p>
+      <p>¿Ya tienes cuenta? {<MemoizedLink route={routes.login} title="Inicia sesión" />}</p>
     </form>
   )
 }
-
-const MemoizedLink = memo((): JSX.Element => {
-  return <Link to={routes.login}>Inicia sesión</Link>
-})
