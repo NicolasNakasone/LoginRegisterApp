@@ -10,8 +10,9 @@ const { JWT_SECRET = '12345678' } = process.env
 export const requestPasswordReset: RequestHandler = async (req, res, next) => {
   try {
     const { email: emailFromClient } = req.body
-    const existingUser = await UserModel.findOne({ where: { email: emailFromClient } })
+    if (!emailFromClient) res.status(400).send({ message: '❌ Email required' })
 
+    const existingUser = await UserModel.findOne({ where: { email: emailFromClient } })
     if (!existingUser) {
       return res.status(404).send({
         code: 'USER_NOT_EXISTS',
@@ -28,7 +29,6 @@ export const requestPasswordReset: RequestHandler = async (req, res, next) => {
     const token = jwt.sign(mappedUser, JWT_SECRET, { expiresIn: '1h' })
 
     const mailSent = await sendResetPasswordEmail(emailFromClient, token)
-
     if (!mailSent.messageId)
       res.status(403).send({ message: '❌ Ocurrió un error al enviar el mail' })
 
@@ -42,23 +42,31 @@ export const resetPassword: RequestHandler = async (req, res, next) => {
   try {
     const { token, newPassword } = req.body
 
-    if (!token) res.status(400).send({ message: 'Token required' })
+    if (!token) return res.status(400).send({ message: '❌ Token required' })
+    if (!newPassword) return res.status(400).send({ message: '❌ Password required' })
 
-    const userDecoded = jwt.verify(token, JWT_SECRET) as PublicUser
+    jwt.verify(`${token}`, JWT_SECRET, async (error, decoded) => {
+      if (error?.message === 'jwt expired')
+        return res.status(401).send({ message: '❌ Token expired' })
 
-    const existingUser = await UserModel.findByPk(userDecoded.id)
-    if (!existingUser) return res.status(404).send({ message: 'User not found' })
+      if (error) return res.status(403).send({ message: `❌ ${error.message}` })
 
-    existingUser.password = await bcrypt.hash(newPassword, 10)
-    await existingUser.save()
+      const typedUser = decoded as PublicUser
 
-    const newPublicUser: PublicUser = {
-      id: existingUser.id,
-      email: existingUser.email,
-      full_name: existingUser.full_name,
-    }
+      const existingUser = await UserModel.findByPk(typedUser.id)
+      if (!existingUser) return res.status(404).send({ message: '❌ User not found' })
 
-    res.send(newPublicUser)
+      existingUser.password = await bcrypt.hash(newPassword, 10)
+      await existingUser.save()
+
+      const newPublicUser: PublicUser = {
+        id: existingUser.id,
+        email: existingUser.email,
+        full_name: existingUser.full_name,
+      }
+
+      res.send(newPublicUser)
+    })
   } catch (error) {
     next(error)
   }
