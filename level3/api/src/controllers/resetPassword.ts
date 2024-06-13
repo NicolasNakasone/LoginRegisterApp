@@ -56,6 +56,13 @@ export const resetPassword: RequestHandler = async (req, res, next) => {
       const existingUser = await UserModel.findByPk(typedUser.id)
       if (!existingUser) return res.status(404).send({ message: '❌ User not found' })
 
+      const isSamePassword = await bcrypt.compare(newPassword, existingUser.password)
+
+      if (isSamePassword)
+        return res
+          .status(403)
+          .send({ message: '❌ La contraseña debe ser diferente a la anterior' })
+
       existingUser.password = await bcrypt.hash(newPassword, 10)
       await existingUser.save()
 
