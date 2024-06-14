@@ -66,12 +66,10 @@ button[type="submit"] {
 /* Para seleccionar solo los p que esten dentro de un form.
   Sino afecta a todos los p y no es la idea
 */
-form > p {
-  &:last-child {
+form > p:first-of-type:not(:has(a)) {
     width: 12vw;
     margin: auto auto 0;
     text-wrap: balance;
-  }
 }
 
 /* form > button[type="button"] {

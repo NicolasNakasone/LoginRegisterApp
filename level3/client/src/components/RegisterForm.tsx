@@ -59,7 +59,7 @@ export const RegisterForm = (): JSX.Element => {
     })
     const response = (await registerUser.json()) as ResponseError
 
-    if (response.code === 'USER_ALREADY_EXISTS') {
+    if (response.message) {
       full_name.value = ''
       email.value = ''
       password.value = ''
@@ -82,7 +82,7 @@ export const RegisterForm = (): JSX.Element => {
       <button disabled={isLoading} type="submit">
         Registrate
       </button>
-      {error && <p>{error}</p>}
+      {error && <p id="error-message">{error}</p>}
       <p>¿Ya tienes cuenta? {<MemoizedLink route={routes.login} title="Inicia sesión" />}</p>
     </form>
   )
