@@ -1,8 +1,9 @@
 import { RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
+import { generateAccessToken } from 'src/authentication'
 import { PublicUser } from 'src/types'
 
-const { JWT_SECRET, JWT_REFRESH_SECRET } = process.env
+const { JWT_REFRESH_SECRET } = process.env
 
 export const refreshToken: RequestHandler = (req, res, next) => {
   try {
@@ -21,9 +22,7 @@ export const refreshToken: RequestHandler = (req, res, next) => {
 
       const { id, email, full_name } = decodedToken as PublicUser
 
-      const newAccessToken = jwt.sign({ id, email, full_name }, JWT_SECRET || '12345678', {
-        expiresIn: '15m',
-      })
+      const newAccessToken = generateAccessToken({ id, email, full_name })
 
       res.send({ accessToken: newAccessToken })
     })

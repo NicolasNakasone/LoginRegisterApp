@@ -4,10 +4,18 @@ import { PublicUser } from 'src/types'
 
 const { JWT_SECRET, JWT_REFRESH_SECRET } = process.env
 
-export const generateTokens = ({ id, email, full_name }: PublicUser) => {
+export const generateAccessToken = (
+  { id, email, full_name }: PublicUser,
+  expiresIn: string | number | undefined = '15m'
+) => {
   const accessToken = jwt.sign({ id, email, full_name }, JWT_SECRET || '12345678', {
-    expiresIn: '15m',
+    expiresIn,
   })
+  return accessToken
+}
+
+export const generateTokens = ({ id, email, full_name }: PublicUser) => {
+  const accessToken = generateAccessToken({ id, email, full_name })
   const refreshToken = jwt.sign({ id, email, full_name }, JWT_REFRESH_SECRET || '87654321', {
     expiresIn: '4h',
   })

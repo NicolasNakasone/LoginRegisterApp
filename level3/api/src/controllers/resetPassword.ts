@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import { RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
+import { generateAccessToken } from 'src/authentication'
 import { UserModel } from 'src/models/user.model'
 import { PublicUser, ResponseError } from 'src/types'
 import { sendResetPasswordEmail } from 'src/utils/mailer'
@@ -26,7 +27,7 @@ export const requestPasswordReset: RequestHandler = async (req, res, next) => {
       full_name: existingUser.full_name,
     }
 
-    const token = jwt.sign(mappedUser, JWT_SECRET, { expiresIn: '15m' })
+    const token = generateAccessToken(mappedUser)
 
     const mailSent = await sendResetPasswordEmail(emailFromClient, token)
     if (!mailSent.messageId)
@@ -60,7 +61,7 @@ export const resetPassword: RequestHandler = async (req, res, next) => {
 
       if (isSamePassword)
         return res
-          .status(403)
+          .status(400)
           .send({ message: '❌ La contraseña debe ser diferente a la anterior' })
 
       existingUser.password = await bcrypt.hash(newPassword, 10)
