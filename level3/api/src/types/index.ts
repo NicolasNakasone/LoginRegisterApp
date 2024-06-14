@@ -13,7 +13,7 @@ export interface AuthenticatedUser {
   refreshToken: string | null
 }
 
-/* Esto despues puede ser algo que tenga el code como un enum, cosa de
+/* TODO: Esto despues puede ser algo que tenga el code como un enum, cosa de
   copiar ese enum al front para no tener que manejar strings
 */
 export interface ResponseError {

@@ -8,9 +8,10 @@ const { JWT_REFRESH_SECRET } = process.env
 export const refreshToken: RequestHandler = (req, res, next) => {
   try {
     const { refreshToken } = req.body
-    /* Aca no es necesario porque en el front no hay validaciones
-      de status para esta request, si falla en el cliente
-      se devuelve el error, y se ejecuta el logout 
+    /* Aca no es necesario cambiar el status a uno que no sea 401, 
+      porque en el front no hay validaciones de status para 
+      esta request, si falla en el cliente se devuelve 
+      el error, y se ejecuta el logout 
     */
     if (!refreshToken) res.status(401).send({ message: 'Refresh token required' })
 

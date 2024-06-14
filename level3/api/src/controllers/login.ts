@@ -23,6 +23,11 @@ export const loginUser: RequestHandler = async (req, res, next) => {
       guardar un email diferente al de la key. Esto tendria mas sentido en el
       futuro cuando se guarde en una DB con el id como key (aunque quizas ya no
       funcione asi { [key]: User })
+
+      Edit: Igual sigue siendo al vicio, porque el id no se usa para obtener al usuario
+      Se sigue usando el email que tiene del body en la request, entonces si o si
+      al encontrar al usuario, logicamente el usuario existe, por ende el email
+      nunca va a ser diferente (existingUser.email !== email)
     */
     if (!isSameEmail)
       res.send({ code: 'EMAIL_NOT_MATCH', message: '❌ Correo incorrecto' } as ResponseError)
