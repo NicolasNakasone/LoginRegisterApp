@@ -9,12 +9,9 @@ const { VITE_API_URL } = import.meta.env
 
 export const ResetPassword = () => {
   const [searchParams] = useSearchParams()
-  // const [newPassword, setNewPassword] = useState('')
-
   const token = searchParams.get('token')
 
   const { error, isLoading, setError, setIsLoading } = useFormStatus()
-
   const [isPasswordReset, setIsPasswordReset] = useState(false)
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {

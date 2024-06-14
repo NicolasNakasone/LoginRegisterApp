@@ -1,4 +1,3 @@
-// No se si sera necesaria realmente, quizas una para getear users...
 import express from 'express'
 import { authenticateToken } from 'src/authentication'
 import { UserModel } from 'src/models/user.model'

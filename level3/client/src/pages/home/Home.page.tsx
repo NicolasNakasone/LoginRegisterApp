@@ -6,7 +6,7 @@ import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
 
 export const HomePage = (): JSX.Element => {
-  const { setIsLogged, user, setUser, navigate } = useContext(UserContext)
+  const { user, setUser, navigate } = useContext(UserContext)
 
   const { isLoading, setIsLoading } = useFormStatus()
 
@@ -14,9 +14,9 @@ export const HomePage = (): JSX.Element => {
     // Para evitar ejecutar todo el codigo si el user ya esta seteado
     if (user) return
 
-    // Revisar sesion iniciada si la base de datos se borro
-    // De ultima cambiar este metodo por un fetch al server
-    // revisando si el user existe en la bd
+    /* Fetch a la API para verificar que el usuario no haya sido borrado 
+      o el accessToken haya expirado
+    */
     const foundUser = await api.getUser()
     if (!foundUser) {
       handleLogout()
@@ -36,7 +36,6 @@ export const HomePage = (): JSX.Element => {
     await api.logout()
 
     setUser(null)
-    setIsLogged(false)
     setIsLoading(false)
     navigate(routes.login)
     return

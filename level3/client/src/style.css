@@ -65,6 +65,8 @@ button[type="submit"] {
 
 /* Para seleccionar solo los p que esten dentro de un form.
   Sino afecta a todos los p y no es la idea
+  Edit: Se agrego :has(a) para solo afectar al p 
+  que se genera si hay un error en el formulario
 */
 form > p:first-of-type:not(:has(a)) {
     width: 12vw;
