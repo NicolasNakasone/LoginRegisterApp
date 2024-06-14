@@ -2,6 +2,7 @@ import { FormEvent, useContext } from 'react'
 
 import { UserInput } from 'src/api'
 import { MemoizedLink, PasswordInput } from 'src/components/common'
+import { passwordPattern } from 'src/constants/regexps'
 import { routes } from 'src/constants/routes'
 import { UserContext } from 'src/contexts/UserContext'
 import { useFormStatus } from 'src/hooks/useFormStatus.hook'
@@ -25,6 +26,14 @@ export const RegisterForm = (): JSX.Element => {
     const email = target[1] as HTMLInputElement
     const password = target[2] as HTMLInputElement
     const re_password = target[3] as HTMLInputElement
+
+    if (!passwordPattern.test(password.value)) {
+      password.value = ''
+      re_password.value = ''
+      // No se setea un error, porque ya es suficiente me parece con las constraints
+      setIsLoading(false)
+      return
+    }
 
     /* TODO: Para evitar tantos if, hacer un handleErrors que reciba
       key = 'errorName', y devuelva un true o algo si hay un error
