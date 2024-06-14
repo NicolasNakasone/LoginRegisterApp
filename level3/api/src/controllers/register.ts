@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import { RequestHandler } from 'express'
+import { passwordPattern } from 'src/constants/regexps'
 import { UserModel } from 'src/models/user.model'
 import { PublicUser, ResponseError } from 'src/types'
 
@@ -14,6 +15,12 @@ export const registerUser: RequestHandler = async (req, res, next) => {
         code: 'USER_ALREADY_EXISTS',
         message: '❌ Usuario ya registrado',
       } as ResponseError)
+
+    if (!passwordPattern.test(plainTextPassword))
+      return res.status(400).send({
+        message:
+          '❌ La contraseña debe tener al menos 8 caracteres que contengan: una mayúscula, una minúscula, un símbolo y un número',
+      })
 
     const hashedPassword = await bcrypt.hash(plainTextPassword, 10)
 

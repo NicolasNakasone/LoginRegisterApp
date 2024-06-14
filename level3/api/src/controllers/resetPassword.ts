@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import { RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
 import { generateAccessToken } from 'src/authentication'
+import { passwordPattern } from 'src/constants/regexps'
 import { UserModel } from 'src/models/user.model'
 import { PublicUser, ResponseError } from 'src/types'
 import { sendResetPasswordEmail } from 'src/utils/mailer'
@@ -45,6 +46,12 @@ export const resetPassword: RequestHandler = async (req, res, next) => {
 
     if (!token) return res.status(400).send({ message: '❌ Token required' })
     if (!newPassword) return res.status(400).send({ message: '❌ Password required' })
+
+    if (!passwordPattern.test(newPassword))
+      return res.status(400).send({
+        message:
+          '❌ La contraseña debe tener al menos 8 caracteres que contengan: una mayúscula, una minúscula, un símbolo y un número',
+      })
 
     jwt.verify(`${token}`, JWT_SECRET, async (error, decoded) => {
       if (error?.message === 'jwt expired')
