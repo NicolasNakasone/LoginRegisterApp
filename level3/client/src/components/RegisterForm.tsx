@@ -18,7 +18,6 @@ export const RegisterForm = (): JSX.Element => {
   const [isPasswordValid, setIsPasswordValid] = useState(true)
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
-    setError('')
     setIsLoading(true)
     e.preventDefault()
 
@@ -83,6 +82,7 @@ export const RegisterForm = (): JSX.Element => {
       return
     }
 
+    setError('')
     navigate(routes.login)
     setIsLoading(false)
     return
@@ -96,11 +96,12 @@ export const RegisterForm = (): JSX.Element => {
         hasRePassword
         isPasswordValid={isPasswordValid}
         setIsPasswordValid={setIsPasswordValid}
+        showConstraints
       />
       <button disabled={isLoading} type="submit">
         Registrate
       </button>
-      {error && <p id="error-message">{error}</p>}
+      {error && <p>{error}</p>}
       <p>¿Ya tienes cuenta? {<MemoizedLink route={routes.login} title="Inicia sesión" />}</p>
     </form>
   )
