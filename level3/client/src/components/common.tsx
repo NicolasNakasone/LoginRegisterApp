@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom'
 
 interface PasswordInputProps {
   hasRePassword?: boolean
-  isPasswordValid: boolean
-  setIsPasswordValid: (value: SetStateAction<boolean>) => void
-  // showConstraints?: boolean /* TODO */
+  isPasswordValid?: boolean
+  setIsPasswordValid?: (value: SetStateAction<boolean>) => void
+  showConstraints?: boolean
   // constraints?: { [key in ConstraintKeys]?: IsPatternValidProps } /* TODO */
 }
 
@@ -53,19 +53,28 @@ const toggleDisplayedEmoji = (text: string, isValid: boolean) => {
 }
 
 export const PasswordInput = memo(
-  ({ hasRePassword, isPasswordValid, setIsPasswordValid }: PasswordInputProps): JSX.Element => {
+  ({
+    hasRePassword,
+    isPasswordValid,
+    setIsPasswordValid,
+    showConstraints,
+  }: PasswordInputProps): JSX.Element => {
     const [passwordConstraints, setPasswordConstraints] = useState(isPatternValid)
 
     const [isPassword, setIsPassword] = useState(true)
 
     useEffect(() => {
+      if (!showConstraints) return
+
       if (!isPasswordValid) {
         setPasswordConstraints(isPatternValid)
-        setIsPasswordValid(true)
+        setIsPasswordValid && setIsPasswordValid(true)
       }
-    }, [isPasswordValid])
+    }, [showConstraints, isPasswordValid])
 
     const handleChange = ({ target: { value: passwordValue } }: ChangeEvent<HTMLInputElement>) => {
+      if (!showConstraints) return
+
       if (!passwordValue) return setPasswordConstraints(isPatternValid)
 
       setPasswordConstraints(prevConstraints => {
@@ -106,11 +115,13 @@ export const PasswordInput = memo(
         <button type="button" onClick={togglePassword}>
           {isPassword ? `Mostrar 🧐` : `Ocultar 😴`}
         </button>
-        <ul>
-          {Object.keys(passwordConstraints).map(key => {
-            return <li key={key}>{passwordConstraints[key].displayText}</li>
-          })}
-        </ul>
+        {showConstraints && (
+          <ul>
+            {Object.keys(passwordConstraints).map(key => {
+              return <li key={key}>{passwordConstraints[key].displayText}</li>
+            })}
+          </ul>
+        )}
       </>
     )
   }
