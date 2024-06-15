@@ -41,6 +41,7 @@ form {
 }
 
 input {
+  width: 100%;
   padding: 0 0.25rem;
   font-family: Inter;
   font-size: 1.25rem;
@@ -63,13 +64,20 @@ button[type="submit"] {
   width: 100%;
 }
 
+ul {
+  padding-inline: 0;
+  margin-block: 0;
+  list-style: none;
+}
+
 /* Para seleccionar solo los p que esten dentro de un form.
   Sino afecta a todos los p y no es la idea
   Edit: Se agrego :has(a) para solo afectar al p 
   que se genera si hay un error en el formulario
 */
 form > p:first-of-type:not(:has(a)) {
-    width: 12vw;
+    width: 28vw;
+    border: 1px solid red;
     margin: auto auto 0;
     text-wrap: balance;
 }
