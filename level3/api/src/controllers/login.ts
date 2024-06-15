@@ -8,6 +8,11 @@ export const loginUser: RequestHandler = async (req, res, next) => {
   try {
     const { email, password: plainTextPassword } = req.body
 
+    if (!email || !plainTextPassword)
+      return res.status(400).send({
+        message: '❌ Las credenciales son requeridas',
+      })
+
     const existingUser = await UserModel.findOne({ where: { email } })
 
     if (!existingUser) {
