@@ -1,9 +1,13 @@
-import { ChangeEvent, memo, useState } from 'react'
+import { ChangeEvent, SetStateAction, memo, useEffect, useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
 interface PasswordInputProps {
   hasRePassword?: boolean
+  isPasswordValid: boolean
+  setIsPasswordValid: (value: SetStateAction<boolean>) => void
+  // showConstraints?: boolean /* TODO */
+  // constraints?: { [key in ConstraintKeys]?: IsPatternValidProps } /* TODO */
 }
 
 type IsPatternValid = {
@@ -48,60 +52,69 @@ const toggleDisplayedEmoji = (text: string, isValid: boolean) => {
   return text.replace(fromEmoji, toEmoji)
 }
 
-export const PasswordInput = memo(({ hasRePassword }: PasswordInputProps): JSX.Element => {
-  const [passwordConstraints, setPasswordConstraints] = useState(isPatternValid)
+export const PasswordInput = memo(
+  ({ hasRePassword, isPasswordValid, setIsPasswordValid }: PasswordInputProps): JSX.Element => {
+    const [passwordConstraints, setPasswordConstraints] = useState(isPatternValid)
 
-  const [isPassword, setIsPassword] = useState(true)
+    const [isPassword, setIsPassword] = useState(true)
 
-  const handleChange = ({ target: { value: passwordValue } }: ChangeEvent<HTMLInputElement>) => {
-    if (!passwordValue) return setPasswordConstraints(isPatternValid)
+    useEffect(() => {
+      if (!isPasswordValid) {
+        setPasswordConstraints(isPatternValid)
+        setIsPasswordValid(true)
+      }
+    }, [isPasswordValid])
 
-    setPasswordConstraints(prevConstraints => {
-      const mappedConstraints = structuredClone(prevConstraints)
+    const handleChange = ({ target: { value: passwordValue } }: ChangeEvent<HTMLInputElement>) => {
+      if (!passwordValue) return setPasswordConstraints(isPatternValid)
 
-      Object.keys(mappedConstraints).forEach(patternKey => {
-        const currentPattern = mappedConstraints[patternKey]
-        const isValidPattern = currentPattern.pattern.test(passwordValue)
+      setPasswordConstraints(prevConstraints => {
+        const mappedConstraints = structuredClone(prevConstraints)
 
-        mappedConstraints[patternKey] = {
-          ...currentPattern,
-          displayText: toggleDisplayedEmoji(currentPattern.displayText, isValidPattern),
-        }
+        Object.keys(mappedConstraints).forEach(patternKey => {
+          const currentPattern = mappedConstraints[patternKey]
+          const isValidPattern = currentPattern.pattern.test(passwordValue)
+
+          mappedConstraints[patternKey] = {
+            ...currentPattern,
+            displayText: toggleDisplayedEmoji(currentPattern.displayText, isValidPattern),
+          }
+        })
+        return mappedConstraints
       })
-      return mappedConstraints
-    })
-  }
+    }
 
-  const togglePassword = () => {
-    setIsPassword(prevPassword => !prevPassword)
-  }
+    const togglePassword = () => {
+      setIsPassword(prevPassword => !prevPassword)
+    }
 
-  return (
-    <>
-      <input
-        name="password"
-        type={isPassword ? 'password' : 'text'}
-        placeholder="Contraseña"
-        onChange={handleChange}
-      />
-      {hasRePassword && (
+    return (
+      <>
         <input
-          name="re_password"
+          name="password"
           type={isPassword ? 'password' : 'text'}
-          placeholder="Repetir contraseña"
+          placeholder="Contraseña"
+          onChange={handleChange}
         />
-      )}
-      <button type="button" onClick={togglePassword}>
-        {isPassword ? `Mostrar 🧐` : `Ocultar 😴`}
-      </button>
-      <ul>
-        {Object.keys(passwordConstraints).map(key => {
-          return <li key={key}>{passwordConstraints[key].displayText}</li>
-        })}
-      </ul>
-    </>
-  )
-})
+        {hasRePassword && (
+          <input
+            name="re_password"
+            type={isPassword ? 'password' : 'text'}
+            placeholder="Repetir contraseña"
+          />
+        )}
+        <button type="button" onClick={togglePassword}>
+          {isPassword ? `Mostrar 🧐` : `Ocultar 😴`}
+        </button>
+        <ul>
+          {Object.keys(passwordConstraints).map(key => {
+            return <li key={key}>{passwordConstraints[key].displayText}</li>
+          })}
+        </ul>
+      </>
+    )
+  }
+)
 
 interface MemoizedLinkProps {
   title: string

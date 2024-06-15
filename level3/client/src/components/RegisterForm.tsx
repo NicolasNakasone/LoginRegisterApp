@@ -1,4 +1,4 @@
-import { FormEvent, useContext } from 'react'
+import { FormEvent, useContext, useState } from 'react'
 
 import { UserInput } from 'src/api'
 import { MemoizedLink, PasswordInput } from 'src/components/common'
@@ -14,6 +14,8 @@ export const RegisterForm = (): JSX.Element => {
   const { navigate } = useContext(UserContext)
 
   const { error, isLoading, setError, setIsLoading } = useFormStatus()
+
+  const [isPasswordValid, setIsPasswordValid] = useState(true)
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     setError('')
@@ -31,6 +33,7 @@ export const RegisterForm = (): JSX.Element => {
       password.value = ''
       re_password.value = ''
       // No se setea un error, porque ya es suficiente me parece con las constraints
+      setIsPasswordValid(false)
       setIsLoading(false)
       return
     }
@@ -46,6 +49,7 @@ export const RegisterForm = (): JSX.Element => {
       password.value = ''
       re_password.value = ''
       setError('❌ Contraseñas no coinciden')
+      setIsPasswordValid(false)
       setIsLoading(false)
       return
     }
@@ -74,6 +78,7 @@ export const RegisterForm = (): JSX.Element => {
       password.value = ''
       re_password.value = ''
       setError(response.message)
+      setIsPasswordValid(false)
       setIsLoading(false)
       return
     }
@@ -87,7 +92,11 @@ export const RegisterForm = (): JSX.Element => {
     <form onSubmit={handleRegister}>
       <input name={'full_name'} type="text" placeholder="Nombre y apellido" />
       <input name={'email'} type="email" placeholder="Correo" />
-      <PasswordInput hasRePassword />
+      <PasswordInput
+        hasRePassword
+        isPasswordValid={isPasswordValid}
+        setIsPasswordValid={setIsPasswordValid}
+      />
       <button disabled={isLoading} type="submit">
         Registrate
       </button>
